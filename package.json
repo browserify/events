@@ -1,0 +1,39 @@
+{
+  "name": "events",
+  "id": "events",
+  "version": "0.1.0",
+  "description": "Node's event emitter for all engines.",
+  "keywords": [ "events", "eventEmitter", "eventDispatcher", "listeners" ],
+  "author": "Irakli Gozalishvili <rfobic@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Gozala/events.git",
+    "web": "https://github.com/Gozala/events"
+  },
+  "bugs": {
+    "web": "http://github.com/Gozala/events/issues/"
+  },
+  "directories": {
+    "doc": "./docs",
+    "lib": "./lib",
+    "test": "./tests"
+  },
+  "devDependencies": {
+    "test": ">=0.0.10"
+  },
+  "dependencies": {
+    "extendables": "0.1.2"
+  },
+  "main": "./lib/events.js",
+  "engines": {
+    "node": "0.4.x",
+    "teleport": ">=0.2.0"
+  },
+  "scripts": {
+    "tests": "node tests/test-events.js"
+  },
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://jeditoolkit.com/LICENSE"
+  }]
+}
