@@ -1,7 +1,7 @@
 {
   "name": "events",
   "id": "events",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node's event emitter for all engines.",
   "keywords": [ "events", "eventEmitter", "eventDispatcher", "listeners" ],
   "author": "Irakli Gozalishvili <rfobic@gmail.com>",
