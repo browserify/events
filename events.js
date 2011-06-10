@@ -6,7 +6,7 @@
 
 "use strict";
 
-var Extendable = require("./extendables").Extendable;
+var Extendable = require('https!raw.github.com/Gozala/extendables/v0.2.0/extendables.js').Extendable;
 var isArray = Array.isArray;
 
 // By default EventEmitters will print a warning if more than
@@ -18,7 +18,7 @@ var isArray = Array.isArray;
 var MAX_LISTENERS = 10;
 var ERROR_TYEPE = 'error';
 
-exports.version = "0.1.1";
+exports.version = "0.2.0";
 exports.EventEmitter = Extendable.extend({
   setMaxListeners: function setMaxListeners(n) {
     if (!this._events) this._events = {};
