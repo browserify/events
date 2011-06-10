@@ -13,21 +13,15 @@
   "bugs": {
     "web": "http://github.com/Gozala/events/issues/"
   },
-  "directories": {
-    "doc": "./docs",
-    "lib": "./lib",
-    "test": "./tests"
-  },
   "devDependencies": {
     "test": ">=0.0.10"
   },
   "dependencies": {
     "extendables": "0.1.2"
   },
-  "main": "./lib/events.js",
+  "main": "./events.js",
   "engines": {
-    "node": "0.4.x",
-    "teleport": ">=0.2.0"
+    "node": "0.4.x"
   },
   "scripts": {
     "tests": "node tests/test-events.js"
