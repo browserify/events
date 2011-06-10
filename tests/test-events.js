@@ -7,7 +7,7 @@
 
 "use strict";
 
-var EventEmitter = require("../lib/events").EventEmitter;
+var EventEmitter = require("../events.js").EventEmitter;
 
 exports['test:add listeners'] = function(assert) {
   var e = new EventEmitter();
