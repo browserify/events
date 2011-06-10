@@ -17,14 +17,15 @@
     "test": ">=0.0.10"
   },
   "dependencies": {
-    "extendables": "0.1.2"
+    "graphquire": ">=0.6.0"
   },
   "main": "./events.js",
   "engines": {
     "node": "0.4.x"
   },
   "scripts": {
-    "tests": "node tests/test-events.js"
+    "test": "node tests/test-events.js",
+    "install": "graphquire --clean --write"
   },
   "licenses": [{
     "type": "MIT",
