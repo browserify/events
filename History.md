@@ -1,5 +1,9 @@
 # History #
 
+## 0.3.0 / 2011-07-03 ##
+
+  - Switching to URL based module require.
+
 ## 0.2.0 / 2011-06-10 ##
 
   - Simplified package structure.
