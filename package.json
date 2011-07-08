@@ -17,7 +17,7 @@
     "test": ">=0.0.10"
   },
   "dependencies": {
-    "graphquire": ">=0.7.0"
+    "graphquire": ">=0.8.0"
   },
   "main": "./events.js",
   "engines": {
