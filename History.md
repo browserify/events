@@ -1,5 +1,9 @@
 # History #
 
+## 0.4.0 / 2011-07-03 ##
+
+  - Switching to graphquire@0.8.0
+
 ## 0.3.0 / 2011-07-03 ##
 
   - Switching to URL based module require.
