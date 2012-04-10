@@ -7,7 +7,7 @@
 
 "use strict";
 
-var EventEmitter = require("../events.js").EventEmitter;
+var EventEmitter = require("implementation").EventEmitter;
 
 exports['test:add listeners'] = function(assert) {
   var e = new EventEmitter();
@@ -166,7 +166,6 @@ exports['test:once'] = function(assert) {
   e.emit('foo', 'baz');
 };
 
-if (module == require.main)
-  require("test").run(exports);
+require("test").run(exports);
 
 });
