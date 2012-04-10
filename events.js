@@ -6,7 +6,7 @@
 
 "use strict";
 
-var Extendable = require('!raw.github.com/Gozala/extendables/v0.2.0/extendables').Extendable;
+var Extendable = require('raw.github.com/Gozala/extendables/v0.2.0/extendables').Extendable;
 var isArray = Array.isArray;
 
 // By default EventEmitters will print a warning if more than
