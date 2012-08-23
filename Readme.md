@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/Gozala/events.png)](http://travis-ci.org/Gozala/events)
 # events #
 
 Node's event emitter for all engines.
