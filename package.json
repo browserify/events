@@ -13,9 +13,6 @@
   "bugs": {
     "web": "http://github.com/Gozala/events/issues/"
   },
-  "dependencies": {
-    "util": "0.10.0"
-  },
   "main": "./events.js",
   "engines": {
     "node": ">=0.4.x"
