@@ -1,4 +1,4 @@
-# events #
+# events [![Build Status](https://travis-ci.org/Gozala/events.png?branch=master)](https://travis-ci.org/Gozala/events)
 
 Node's event emitter for all engines.
 
