@@ -13,15 +13,15 @@
   "bugs": {
     "web": "http://github.com/Gozala/events/issues/"
   },
-  "devDependencies": {
-    "test": ">=0.0.10"
+  "dependencies": {
+    "util": "0.10.0"
   },
   "main": "./events.js",
   "engines": {
     "node": ">=0.4.x"
   },
   "scripts": {
-    "test": "node tests/test-events.js"
+    "test": "node tests/index.js"
   },
   "licenses": [{
     "type": "MIT",

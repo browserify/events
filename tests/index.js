@@ -1,0 +1,12 @@
+require('./add-listeners.js');
+require('./check-listener-leaks.js');
+require('./listeners-side-effects.js');
+require('./listeners.js');
+require('./max-listeners.js');
+require('./modify-in-emit.js');
+require('./num-args.js');
+require('./once.js');
+require('./remove-all-listeners.js');
+require('./remove-listeners.js');
+require('./set-max-listeners-side-effects.js');
+require('./subclass.js');

@@ -1,5 +1,10 @@
 # History #
 
+## unreleased
+
+  - Update to latest events code from node.js 0.10
+  - copy tests from node.js
+
 ## 0.4.0 / 2011-07-03 ##
 
   - Switching to graphquire@0.8.0

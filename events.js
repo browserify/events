@@ -1,146 +1,286 @@
-/* vim:set ts=2 sw=2 sts=2 expandtab */
-/*jshint newcap: true undef: true es5: true node: true devel: true
-         forin: true */
-/*global define: true */
-(typeof define !== "function" ? function($){ $(require, exports, module); } : define)(function(require, exports, module, undefined) {
-
-"use strict";
-
-var Extendable = require('raw.github.com/Gozala/extendables/v0.2.0/extendables').Extendable;
-var isArray = Array.isArray;
-
-// By default EventEmitters will print a warning if more than
-// 10 listeners are added to it. This is a useful default which
-// helps finding memory leaks.
+// Copyright Joyent, Inc. and other Node contributors.
 //
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var util = require('util/');
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
 // Obviously not all Emitters should be limited to 10. This function allows
 // that to be increased. Set to zero for unlimited.
-var MAX_LISTENERS = 10;
-var ERROR_TYEPE = 'error';
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!util.isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
 
-exports.version = "0.2.0";
-exports.EventEmitter = Extendable.extend({
-  setMaxListeners: function setMaxListeners(n) {
-    if (!this._events) this._events = {};
-    this._events.maxListeners = n;
-  },
-  emit: function emit(type) {
-    var args = Array.prototype.slice.call(arguments, 1);
-    var listeners = this.listeners(type);
-    if (type === ERROR_TYEPE && !listeners.length)
-      console.error(args[0]);
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
 
-    listeners.forEach(function(listener) {
-      try {
-        listener.apply(this, args);
-      } catch (error) {
-        // We emit `error` event if listener threw an exception. If there are
-        // no listeners for `error` events or if listener for `error` event
-        // threw then we dump error directly to the console.
-        if (type !== ERROR_TYEPE && this.listeners(ERROR_TYEPE).length)
-          this.emit(ERROR_TYEPE, error);
-        else
-          console.error(error);
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (util.isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      } else {
+        throw TypeError('Uncaught, unspecified "error" event.');
       }
-    }, this);
-  },
-  on: function on(type, listener) {
-    if (!this._events)
-      this._events = {};
-
-    // To avoid recursion in the case that type == "newListeners"! Before
-    // adding it to the listeners, first emit "newListeners".
-    this.emit('newListener', type, listener);
-
-    var events = this._events[type];
-    if (!events) {
-      // Optimize the case of one listener. Don't need the extra array object.
-      this._events[type] = listener;
-
-    // If listener is an array and if listener is not registered yet.
-    } else if (isArray(events) && !~events.indexOf(listener)) {
-
-      // Check for listener leak
-      if (!events.warned) {
-        var m = events.maxListeners !== undefined ? events.maxListeners :
-                MAX_LISTENERS;
-
-        if (m && m > 0 && events.length > m) {
-          events.warned = true;
-          console.error('warning: possible EventEmitter memory ' +
-                        'leak detected. %d listeners added. ' +
-                        'Use emitter.setMaxListeners() to increase limit.',
-                        this._events[type].length);
-        }
-      }
-
-      events.push(listener);
-
-    // If it's not the same listener adding it
-    } else if (events !== listener) {
-      // Adding the second element, need to change to array.
-      this._events[type] = [events, listener];
+      return false;
     }
-
-    return this;
-  },
-  once: function once(type, listener) {
-    var self = this;
-    function g() {
-      self.removeListener(type, g);
-      listener.apply(self, arguments);
-    }
-
-    g.listener = listener;
-    self.on(type, g);
-    return this;
-  },
-  removeListener: function removeListener(type, listener) {
-    if ('function' !== typeof listener) {
-      throw new Error('removeListener only takes instances of Function');
-    }
-
-    // does not use listeners(), so no side effect of creating _events[type]
-    if (!this._events || !this._events[type]) return this;
-
-    var list = this._events[type];
-
-    if (isArray(list)) {
-      var position = -1;
-      for (var i = 0, length = list.length; i < length; i++) {
-        if (list[i] === listener ||
-            (list[i].listener && list[i].listener === listener))
-        {
-          position = i;
-          break;
-        }
-      }
-
-      if (position < 0) return this;
-      list.splice(position, 1);
-      if (list.length === 0)
-        delete this._events[type];
-    } else if (list === listener ||
-               (list.listener && list.listener === listener))
-    {
-      delete this._events[type];
-    }
-
-    return this;
-  },
-  removeAllListeners: function removeAllListeners(type) {
-    // does not use listeners(), so no side effect of creating _events[type]
-    if (type && this._events && this._events[type]) this._events[type] = null;
-    return this;
-  },
-  listeners: function listeners(type) {
-    if (!this._events) this._events = {};
-    if (!this._events[type]) this._events[type] = [];
-    if (!isArray(this._events[type])) {
-      this._events[type] = [this._events[type]];
-    }
-    return this._events[type].slice(0);
   }
-});
 
-});
+  handler = this._events[type];
+
+  if (util.isUndefined(handler))
+    return false;
+
+  if (util.isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        len = arguments.length;
+        args = new Array(len - 1);
+        for (i = 1; i < len; i++)
+          args[i - 1] = arguments[i];
+        handler.apply(this, args);
+    }
+  } else if (util.isObject(handler)) {
+    len = arguments.length;
+    args = new Array(len - 1);
+    for (i = 1; i < len; i++)
+      args[i - 1] = arguments[i];
+
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!util.isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              util.isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (util.isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (util.isObject(this._events[type]) && !this._events[type].warned) {
+    var m;
+    if (!util.isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      console.trace();
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!util.isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!util.isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (util.isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (util.isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (util.isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (util.isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  var ret;
+  if (!emitter._events || !emitter._events[type])
+    ret = 0;
+  else if (util.isFunction(emitter._events[type]))
+    ret = 1;
+  else
+    ret = emitter._events[type].length;
+  return ret;
+};
