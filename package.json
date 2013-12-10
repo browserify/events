@@ -18,7 +18,7 @@
     "node": ">=0.4.x"
   },
   "scripts": {
-    "test": "node tests/index.js"
+    "test": "mocha --ui qunit -- tests/index.js"
   },
   "licenses": [{
     "type": "MIT",
