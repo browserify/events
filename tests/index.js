@@ -1,4 +1,6 @@
 
+require('./legacy-compat');
+
 // we do this to easily wrap each file in a mocha test
 // and also have browserify be able to statically analyze this file
 var orig_require = require;

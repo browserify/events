@@ -3,19 +3,22 @@ var assert = require('assert');
 var mustCallChecks = [];
 
 function runCallChecks() {
-  var failed = mustCallChecks.filter(function(context) {
-    return context.actual !== context.expected;
-  });
+  var failed_count = 0;
+  for (var i=0 ; i< mustCallChecks.length; ++i) {
+    var context = mustCallChecks[i];
+    if (context.actual === context.expected) {
+      continue;
+    }
 
-  failed.forEach(function(context) {
+    failed_count++;
     console.log('Mismatched %s function calls. Expected %d, actual %d.',
                 context.name,
                 context.expected,
                 context.actual);
     console.log(context.stack.split('\n').slice(2).join('\n'));
-  });
+  }
 
-  assert(failed.length === 0);
+  assert(failed_count === 0);
 }
 
 after(runCallChecks);

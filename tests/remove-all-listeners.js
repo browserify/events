@@ -25,9 +25,9 @@ var events = require('../');
 
 var after_checks = [];
 after(function() {
-  after_checks.forEach(function(fn) {
-    fn();
-  });
+  for (var i=0 ; i<after_checks.length ; ++i) {
+    after_checks[i]();
+  }
 });
 
 function expect(expected) {

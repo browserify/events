@@ -21,7 +21,7 @@
     "mocha": "1.15.1"
   },
   "scripts": {
-    "test": "mocha --ui qunit -- tests/index.js"
+    "test": "mocha --ui qunit -- tests/index.js && zuul -- test/index.js"
   },
   "licenses": [{
     "type": "MIT",
