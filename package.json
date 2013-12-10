@@ -1,9 +1,14 @@
 {
   "name": "events",
   "id": "events",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Node's event emitter for all engines.",
-  "keywords": [ "events", "eventEmitter", "eventDispatcher", "listeners" ],
+  "keywords": [
+    "events",
+    "eventEmitter",
+    "eventDispatcher",
+    "listeners"
+  ],
   "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
   "repository": {
     "type": "git",
@@ -24,8 +29,10 @@
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "http://jeditoolkit.com/LICENSE"
-  }]
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://jeditoolkit.com/LICENSE"
+    }
+  ]
 }
