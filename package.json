@@ -22,7 +22,7 @@
     "zuul": "~1.0.6"
   },
   "scripts": {
-    "test": "mocha --ui qunit -- tests/index.js && zuul -- test/index.js"
+    "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
   },
   "licenses": [{
     "type": "MIT",
