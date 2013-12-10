@@ -11,11 +11,14 @@
     "web": "https://github.com/Gozala/events"
   },
   "bugs": {
-    "web": "http://github.com/Gozala/events/issues/"
+    "url": "http://github.com/Gozala/events/issues/"
   },
   "main": "./events.js",
   "engines": {
     "node": ">=0.4.x"
+  },
+  "devDependencies": {
+    "mocha": "1.15.1"
   },
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js"
