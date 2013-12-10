@@ -23,11 +23,19 @@ var common = require('./common');
 var assert = require('assert');
 var events = require('../');
 
+var after_checks = [];
+after(function() {
+  after_checks.forEach(function(fn) {
+    fn();
+  });
+});
+
 function expect(expected) {
   var actual = [];
-  process.on('exit', function() {
+  after_checks.push(function() {
     assert.deepEqual(actual.sort(), expected.sort());
   });
+
   function listener(name) {
     actual.push(name)
   }

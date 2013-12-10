@@ -1,8 +1,8 @@
+var assert = require('assert');
+
 var mustCallChecks = [];
 
-function runCallChecks(exitCode) {
-  if (exitCode !== 0) return;
-
+function runCallChecks() {
   var failed = mustCallChecks.filter(function(context) {
     return context.actual !== context.expected;
   });
@@ -15,9 +15,10 @@ function runCallChecks(exitCode) {
     console.log(context.stack.split('\n').slice(2).join('\n'));
   });
 
-  if (failed.length) process.exit(1);
+  assert(failed.length === 0);
 }
 
+after(runCallChecks);
 
 exports.mustCall = function(fn, expected) {
   if (typeof expected !== 'number') expected = 1;
@@ -28,9 +29,6 @@ exports.mustCall = function(fn, expected) {
     stack: (new Error).stack,
     name: fn.name || '<anonymous>'
   };
-
-  // add the exit listener only once to avoid listener leak warnings
-  if (mustCallChecks.length === 0) process.on('exit', runCallChecks);
 
   mustCallChecks.push(context);
 
