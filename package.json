@@ -29,10 +29,5 @@
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://jeditoolkit.com/LICENSE"
-    }
-  ]
+  "licenses": "MIT"
 }
