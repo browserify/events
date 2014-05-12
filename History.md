@@ -1,6 +1,8 @@
-# History #
-
 ## unreleased
+
+  - check for console.trace before using it
+
+## 1.0.0 / 2013-12-10
 
   - Update to latest events code from node.js 0.10
   - copy tests from node.js
