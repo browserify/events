@@ -1,3 +1,5 @@
+## unreleased
+
 ## 1.0.1 / 2014-05-11
 
   - check for console.trace before using it
