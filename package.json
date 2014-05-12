@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "mocha": "1.15.1",
-    "zuul": "~1.0.6"
+    "zuul": "~1.6.4"
   },
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
