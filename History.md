@@ -1,4 +1,4 @@
-## unreleased
+# 1.0.2 (2014-08-28)
 
   - remove un-reachable code
   - update devDeps
