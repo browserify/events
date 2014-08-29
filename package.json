@@ -23,8 +23,8 @@
     "node": ">=0.4.x"
   },
   "devDependencies": {
-    "mocha": "1.15.1",
-    "zuul": "~1.6.4"
+    "mocha": "~1.21.4",
+    "zuul": "~1.10.2"
   },
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"

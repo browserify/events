@@ -1,5 +1,8 @@
 ## unreleased
 
+  - remove un-reachable code
+  - update devDeps
+
 ## 1.0.1 / 2014-05-11
 
   - check for console.trace before using it
