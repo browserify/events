@@ -29,5 +29,5 @@
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
   },
-  "licenses": "MIT"
+  "license": "MIT"
 }
