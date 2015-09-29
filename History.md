@@ -1,3 +1,7 @@
+# UNRELEASED
+
+  - add Emitter#listerCount (to match node v4 api)
+
 # 1.0.2 (2014-08-28)
 
   - remove un-reachable code
