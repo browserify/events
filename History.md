@@ -1,4 +1,4 @@
-# UNRELEASED
+# 1.1.0 (2015-09-29)
 
   - add Emitter#listerCount (to match node v4 api)
 
