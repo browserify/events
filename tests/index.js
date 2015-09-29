@@ -12,6 +12,7 @@ var require = function(file) {
 
 require('./add-listeners.js');
 require('./check-listener-leaks.js');
+require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
 require('./max-listeners.js');
