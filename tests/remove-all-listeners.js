@@ -21,7 +21,7 @@
 
 var common = require('./common');
 var assert = require('assert');
-var events = require('../');
+var EventEmitter = require('../');
 
 var after_checks = [];
 after(function() {
@@ -44,7 +44,7 @@ function expect(expected) {
 
 function listener() {}
 
-var e1 = new events.EventEmitter();
+var e1 = new EventEmitter();
 e1.on('foo', listener);
 e1.on('bar', listener);
 e1.on('baz', listener);
@@ -68,7 +68,7 @@ assert.deepEqual(bazListeners, [listener, listener]);
 assert.notEqual(e1.listeners('bar'), barListeners);
 assert.notEqual(e1.listeners('baz'), bazListeners);
 
-var e2 = new events.EventEmitter();
+var e2 = new EventEmitter();
 e2.on('foo', listener);
 e2.on('bar', listener);
 // expect LIFO order

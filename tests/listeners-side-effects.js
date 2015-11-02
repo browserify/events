@@ -21,7 +21,7 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var EventEmitter = require('../').EventEmitter;
+var EventEmitter = require('../');
 
 var e = new EventEmitter;
 var fl;  // foo listeners
