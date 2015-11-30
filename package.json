@@ -29,5 +29,12 @@
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
   },
+  "jspm": {
+    "map": {
+      "./events.js": {
+        "node": "@node/events"
+      }
+    }
+  },
   "license": "MIT"
 }
