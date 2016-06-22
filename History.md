@@ -1,4 +1,4 @@
-# UNRELEASED
+# 1.1.1 (2016-06-22)
 
   - add more context to errors if they are not instanceof Error
 
