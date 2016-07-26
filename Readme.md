@@ -14,6 +14,15 @@ npm install events
 var EventEmitter = require('events').EventEmitter
 ```
 
+## Browser ##
+
+```html
+<script src="/path/to/events.js"></script>
+<script>
+    var myEmitter = new events.EventEmitter();
+</script>
+```
+
 ## Usage ##
 
 See the [node.js event emitter docs](http://nodejs.org/api/events.html)

@@ -1,0 +1,25 @@
+{
+  "name": "events",
+  "description": "Node's event emitter for the browser.",
+  "main": "./events.js",
+  "authors": [
+    "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
+    "Escaux Product Development <product@escaux.com> (http://escaux.com)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "events",
+    "eventEmitter",
+    "eventDispatcher",
+    "listeners"
+  ],
+  "homepage": "https://github.com/Escaux/events",
+  "ignore": [
+    "**/.*",
+    "package.json",
+    "npm-debug.log",
+    "node_modules",
+    "bower_components",
+    "tests"
+  ]
+}

@@ -19,6 +19,19 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+((function (root, factory) {
+  var name = 'events';
+  if (typeof define === 'function' && define.amd) {
+    define(name, [], function () {
+      return factory({});
+    });
+  } else if (typeof module === 'object' && module.exports) {
+    factory(module);
+  } else {
+    root[name] = factory({});
+  }
+})(this, function (module) {
+
 function EventEmitter() {
   this._events = this._events || {};
   this._maxListeners = this._maxListeners || undefined;
@@ -300,3 +313,7 @@ function isObject(arg) {
 function isUndefined(arg) {
   return arg === void 0;
 }
+
+return EventEmitter;
+
+}));
