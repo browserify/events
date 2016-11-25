@@ -19,11 +19,26 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else if (typeof exports === 'object') {
+        // like Node.
+        module.exports = factory();
+    } else {
+        // Browser globals (root is window)
+        root.events = factory();
+  }
+}(this, function () {
+
+
 function EventEmitter() {
   this._events = this._events || {};
   this._maxListeners = this._maxListeners || undefined;
 }
-module.exports = EventEmitter;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
@@ -300,3 +315,5 @@ function isObject(arg) {
 function isUndefined(arg) {
   return arg === void 0;
 }
+return EventEmitter;
+}));
