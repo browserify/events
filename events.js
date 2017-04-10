@@ -72,22 +72,7 @@ EventEmitter.prototype.emit = function(type) {
     return false;
 
   if (isFunction(handler)) {
-    switch (arguments.length) {
-      // fast cases
-      case 1:
-        handler.call(this);
-        break;
-      case 2:
-        handler.call(this, arguments[1]);
-        break;
-      case 3:
-        handler.call(this, arguments[1], arguments[2]);
-        break;
-      // slower
-      default:
-        args = Array.prototype.slice.call(arguments, 1);
-        handler.apply(this, args);
-    }
+        handler.apply(this, arguments);
   } else if (isObject(handler)) {
     args = Array.prototype.slice.call(arguments, 1);
     listeners = handler.slice();
