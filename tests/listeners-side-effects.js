@@ -31,7 +31,7 @@ fl = e.listeners('foo');
 assert.ok(Array.isArray(fl));
 assert.strictEqual(fl.length, 0);
 assert.ok(!(e._events instanceof Object));
-assert.deepStrictEqual(Object.keys(e._events), []);
+assert.strictEqual(Object.keys(e._events).length, 0);
 
 e.on('foo', assert.fail);
 fl = e.listeners('foo');
@@ -54,5 +54,3 @@ assert.ok(Array.isArray(fl));
 assert.strictEqual(fl.length, 2);
 assert.strictEqual(fl[0], assert.fail);
 assert.strictEqual(fl[1], assert.ok);
-
-console.log('ok');

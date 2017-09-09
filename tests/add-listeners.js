@@ -48,13 +48,24 @@ var EventEmitter = require('../');
   ee.once('newListener', function(name, listener) {
     assert.strictEqual(name, 'hello');
     assert.strictEqual(listener, hello);
-    assert.deepStrictEqual(this.listeners('hello'), []);
+
+    var listeners = this.listeners('hello');
+    assert.ok(Array.isArray(listeners));
+    assert.strictEqual(listeners.length, 0);
   });
 
   ee.on('hello', hello);
   ee.once('foo', assert.fail);
-  assert.deepStrictEqual(['hello', 'foo'], events_new_listener_emitted);
-  assert.deepStrictEqual([hello, assert.fail], listeners_new_listener_emitted);
+
+  assert.ok(Array.isArray(events_new_listener_emitted));
+  assert.strictEqual(events_new_listener_emitted.length, 2);
+  assert.strictEqual(events_new_listener_emitted[0], 'hello');
+  assert.strictEqual(events_new_listener_emitted[1], 'foo');
+
+  assert.ok(Array.isArray(listeners_new_listener_emitted));
+  assert.strictEqual(listeners_new_listener_emitted.length, 2);
+  assert.strictEqual(listeners_new_listener_emitted[0], hello);
+  assert.strictEqual(listeners_new_listener_emitted[1], assert.fail);
 
   ee.emit('hello', 'a', 'b');
 }
@@ -72,16 +83,24 @@ var EventEmitter = require('../');
   var ee = new EventEmitter();
 
   ee.once('newListener', function() {
-    assert.deepStrictEqual(ee.listeners('hello'), []);
+    var listeners = ee.listeners('hello');
+    assert.ok(Array.isArray(listeners));
+    assert.strictEqual(listeners.length, 0);
     ee.once('newListener', function() {
-      assert.deepStrictEqual(ee.listeners('hello'), []);
+      var listeners = ee.listeners('hello');
+      assert.ok(Array.isArray(listeners));
+      assert.strictEqual(listeners.length, 0);
     });
     ee.on('hello', listen2);
   });
   ee.on('hello', listen1);
   // The order of listeners on an event is not always the order in which the
   // listeners were added.
-  assert.deepStrictEqual(ee.listeners('hello'), [listen2, listen1]);
+  var listeners = ee.listeners('hello');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 2);
+  assert.strictEqual(listeners[0], listen2);
+  assert.strictEqual(listeners[1], listen1);
 }
 
 // Verify that the listener must be a function

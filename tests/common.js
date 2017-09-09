@@ -46,7 +46,7 @@ function runCallChecks(exitCode) {
     console.log(context.stack.split('\n').slice(2).join('\n'));
   });
 
-  assert.equal(failed.length, 0);
+  assert.strictEqual(failed.length, 0);
 }
 
 exports.mustCall = function(fn, exact) {

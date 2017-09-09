@@ -49,17 +49,25 @@ assert.strictEqual(e.listeners('foo').length, 1);
 
 e.emit('foo');
 assert.strictEqual(e.listeners('foo').length, 2);
-assert.deepStrictEqual(['callback1'], callbacks_called);
+assert.ok(Array.isArray(callbacks_called));
+assert.strictEqual(callbacks_called.length, 1);
+assert.strictEqual(callbacks_called[0], 'callback1');
 
 e.emit('foo');
 assert.strictEqual(e.listeners('foo').length, 0);
-assert.deepStrictEqual(['callback1', 'callback2', 'callback3'],
-    callbacks_called);
+assert.ok(Array.isArray(callbacks_called));
+assert.strictEqual(callbacks_called.length, 3);
+assert.strictEqual(callbacks_called[0], 'callback1');
+assert.strictEqual(callbacks_called[1], 'callback2');
+assert.strictEqual(callbacks_called[2], 'callback3');
 
 e.emit('foo');
 assert.strictEqual(e.listeners('foo').length, 0);
-assert.deepStrictEqual(['callback1', 'callback2', 'callback3'],
-    callbacks_called);
+assert.ok(Array.isArray(callbacks_called));
+assert.strictEqual(callbacks_called.length, 3);
+assert.strictEqual(callbacks_called[0], 'callback1');
+assert.strictEqual(callbacks_called[1], 'callback2');
+assert.strictEqual(callbacks_called[2], 'callback3');
 
 e.on('foo', callback1);
 e.on('foo', callback2);
@@ -75,5 +83,8 @@ e.on('foo', callback2);
 e.on('foo', callback3);
 assert.strictEqual(2, e.listeners('foo').length);
 e.emit('foo');
-assert.deepStrictEqual(['callback2', 'callback3'], callbacks_called);
+assert.ok(Array.isArray(callbacks_called));
+assert.strictEqual(callbacks_called.length, 2);
+assert.strictEqual(callbacks_called[0], 'callback2');
+assert.strictEqual(callbacks_called[1], 'callback3');
 assert.strictEqual(0, e.listeners('foo').length);

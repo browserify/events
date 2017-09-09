@@ -33,7 +33,14 @@ after(function() {
 function expect(expected) {
   var actual = [];
   after_checks.push(function() {
-    assert.deepStrictEqual(actual.sort(), expected.sort());
+    assert.ok();
+
+    var sortedActual = actual.sort();
+    var sortedExpected = expected.sort();
+    assert.strictEqual(sortedActual.length, sortedExpected.length);
+    sortedActual.forEach(function(value, index) {
+      assert.strictEqual(value, sortedExpected[index]);
+    });
   });
   function listener(name) {
     actual.push(name);

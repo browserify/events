@@ -68,8 +68,13 @@ assert.throws(function() {
       args.push(j);
 
     ee.once('foo', common.mustCall(function() {
-    	var params = Array.prototype.slice.call(arguments);
-      assert.deepStrictEqual(params, args.slice(1));
+      var params = Array.prototype.slice.call(arguments);
+      var restArgs = args.slice(1);
+      assert.ok(Array.isArray(params));
+      assert.strictEqual(params.length, restArgs.length);
+      params.forEach(function(param, index) {
+        assert.strictEqual(param, restArgs[index]);
+      });
   	}));
 
     EventEmitter.prototype.emit.apply(ee, args);

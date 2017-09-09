@@ -56,5 +56,14 @@ e.emit('numArgs', null, null, null, null, null);
 e.emit('foo', null, null, null, null);
 
 after_checks.push(function() {
-  assert.deepStrictEqual([0, 1, 2, 3, 4, 5, 4, 4], num_args_emitted);
+  assert.ok(Array.isArray(num_args_emitted));
+  assert.strictEqual(num_args_emitted.length, 8);
+  assert.strictEqual(num_args_emitted[0], 0);
+  assert.strictEqual(num_args_emitted[1], 1);
+  assert.strictEqual(num_args_emitted[2], 2);
+  assert.strictEqual(num_args_emitted[3], 3);
+  assert.strictEqual(num_args_emitted[4], 4);
+  assert.strictEqual(num_args_emitted[5], 5);
+  assert.strictEqual(num_args_emitted[6], 4);
+  assert.strictEqual(num_args_emitted[6], 4);
 });
