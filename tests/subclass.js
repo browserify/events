@@ -19,7 +19,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-'use strict';
 var common = require('./common');
 var assert = require('assert');
 var EventEmitter = require('../').EventEmitter;
@@ -54,7 +53,7 @@ assert.throws(function() {
 }, /blerg/);
 
 after_checks.push(function() {
-  assert(!(myee._events instanceof Object));
+  assert.ok(!(myee._events instanceof Object));
   assert.deepStrictEqual(Object.keys(myee._events), []);
   console.log('ok');
 });
