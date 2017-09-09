@@ -23,8 +23,8 @@ var common = require('./common');
 var assert = require('assert');
 var EventEmitter = require('../');
 
-function listener1() {}
-function listener2() {}
+var listener1 = function listener1() {};
+var listener2 = function listener2() {};
 
 {
   var ee = new EventEmitter();
@@ -34,7 +34,9 @@ function listener2() {}
     assert.strictEqual(cb, listener1);
   }));
   ee.removeListener('hello', listener1);
-  assert.deepStrictEqual([], ee.listeners('hello'));
+  var listeners = ee.listeners('hello');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
 }
 
 {
@@ -42,27 +44,43 @@ function listener2() {}
   ee.on('hello', listener1);
   ee.on('removeListener', common.mustNotCall());
   ee.removeListener('hello', listener2);
-  assert.deepStrictEqual([listener1], ee.listeners('hello'));
+
+  var listeners = ee.listeners('hello');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 1);
+  assert.strictEqual(listeners[0], listener1);
 }
 
 {
   var ee = new EventEmitter();
   ee.on('hello', listener1);
   ee.on('hello', listener2);
+
+  var listeners;
   ee.once('removeListener', common.mustCall(function(name, cb) {
     assert.strictEqual(name, 'hello');
     assert.strictEqual(cb, listener1);
-    assert.deepStrictEqual([listener2], ee.listeners('hello'));
+    listeners = ee.listeners('hello');
+    assert.ok(Array.isArray(listeners));
+    assert.strictEqual(listeners.length, 1);
+    assert.strictEqual(listeners[0], listener2);
   }));
   ee.removeListener('hello', listener1);
-  assert.deepStrictEqual([listener2], ee.listeners('hello'));
+  listeners = ee.listeners('hello');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 1);
+  assert.strictEqual(listeners[0], listener2);
   ee.once('removeListener', common.mustCall(function(name, cb) {
     assert.strictEqual(name, 'hello');
     assert.strictEqual(cb, listener2);
-    assert.deepStrictEqual([], ee.listeners('hello'));
+    listeners = ee.listeners('hello');
+    assert.ok(Array.isArray(listeners));
+    assert.strictEqual(listeners.length, 0);
   }));
   ee.removeListener('hello', listener2);
-  assert.deepStrictEqual([], ee.listeners('hello'));
+  listeners = ee.listeners('hello');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
 }
 
 {
@@ -90,20 +108,31 @@ function listener2() {}
   var ee = new EventEmitter();
   ee.on('hello', listener1);
   ee.on('hello', listener2);
+
+  var listeners;
   ee.once('removeListener', common.mustCall(function(name, cb) {
     assert.strictEqual(name, 'hello');
     assert.strictEqual(cb, listener1);
-    assert.deepStrictEqual([listener2], ee.listeners('hello'));
+    listeners = ee.listeners('hello');
+    assert.ok(Array.isArray(listeners));
+    assert.strictEqual(listeners.length, 1);
+    assert.strictEqual(listeners[0], listener2);
     ee.once('removeListener', common.mustCall(function(name, cb) {
       assert.strictEqual(name, 'hello');
       assert.strictEqual(cb, listener2);
-      assert.deepStrictEqual([], ee.listeners('hello'));
+      listeners = ee.listeners('hello');
+      assert.ok(Array.isArray(listeners));
+      assert.strictEqual(listeners.length, 0);
     }));
     ee.removeListener('hello', listener2);
-    assert.deepStrictEqual([], ee.listeners('hello'));
+    listeners = ee.listeners('hello');
+    assert.ok(Array.isArray(listeners));
+    assert.strictEqual(listeners.length, 0);
   }));
   ee.removeListener('hello', listener1);
-  assert.deepStrictEqual([], ee.listeners('hello'));
+  listeners = ee.listeners('hello');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
 }
 
 {
@@ -139,7 +168,7 @@ function listener2() {}
 {
   var ee = new EventEmitter();
 
-  assert.deepStrictEqual(ee, ee.removeListener('foo', function() {}));
+  assert.strictEqual(ee, ee.removeListener('foo', function() {}));
 }
 
 // Verify that the removed listener must be a function
@@ -162,13 +191,21 @@ assert.throws(function() {
 
   ee.on('foo', listener1);
   ee.on('foo', listener2);
-  assert.deepStrictEqual(ee.listeners('foo'), [listener1, listener2]);
+  var listeners = ee.listeners('foo');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 2);
+  assert.strictEqual(listeners[0], listener1);
+  assert.strictEqual(listeners[1], listener2);
 
   ee.removeListener('foo', listener1);
   assert.strictEqual(ee._events.foo, listener2);
 
   ee.on('foo', listener1);
-  assert.deepStrictEqual(ee.listeners('foo'), [listener2, listener1]);
+  listeners = ee.listeners('foo');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 2);
+  assert.strictEqual(listeners[0], listener2);
+  assert.strictEqual(listeners[1], listener1);
 
   ee.removeListener('foo', listener1);
   assert.strictEqual(ee._events.foo, listener2);

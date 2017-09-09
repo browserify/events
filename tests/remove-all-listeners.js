@@ -33,8 +33,6 @@ after(function() {
 function expect(expected) {
   var actual = [];
   after_checks.push(function() {
-    assert.ok();
-
     var sortedActual = actual.sort();
     var sortedExpected = expected.sort();
     assert.strictEqual(sortedActual.length, sortedExpected.length);
@@ -61,14 +59,27 @@ function expect(expected) {
   ee.on('removeListener', expect(['bar', 'baz', 'baz']));
   ee.removeAllListeners('bar');
   ee.removeAllListeners('baz');
-  assert.deepStrictEqual(ee.listeners('foo'), [noop]);
-  assert.deepStrictEqual(ee.listeners('bar'), []);
-  assert.deepStrictEqual(ee.listeners('baz'), []);
+
+  var listeners = ee.listeners('foo');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 1);
+  assert.strictEqual(listeners[0], noop);
+
+  listeners = ee.listeners('bar');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
+  listeners = ee.listeners('baz');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
   // After calling removeAllListeners(),
   // the old listeners array should stay unchanged.
-  assert.deepStrictEqual(fooListeners, [noop]);
-  assert.deepStrictEqual(barListeners, [noop]);
-  assert.deepStrictEqual(bazListeners, [noop, noop]);
+  assert.strictEqual(fooListeners.length, 1);
+  assert.strictEqual(fooListeners[0], noop);
+  assert.strictEqual(barListeners.length, 1);
+  assert.strictEqual(barListeners[0], noop);
+  assert.strictEqual(bazListeners.length, 2);
+  assert.strictEqual(bazListeners[0], noop);
+  assert.strictEqual(bazListeners[1], noop);
   // After calling removeAllListeners(),
   // new listeners arrays is different from the old.
   assert.notStrictEqual(ee.listeners('bar'), barListeners);
@@ -83,8 +94,13 @@ function expect(expected) {
   ee.on('removeListener', expect(['foo', 'bar', 'removeListener']));
   ee.on('removeListener', expect(['foo', 'bar']));
   ee.removeAllListeners();
-  assert.deepStrictEqual([], ee.listeners('foo'));
-  assert.deepStrictEqual([], ee.listeners('bar'));
+
+  var listeners = ee.listeners('foo');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
+  listeners = ee.listeners('bar');
+  assert.ok(Array.isArray(listeners));
+  assert.strictEqual(listeners.length, 0);
 }
 
 {
@@ -112,7 +128,7 @@ function expect(expected) {
 
 {
   var ee = new events.EventEmitter();
-  assert.deepStrictEqual(ee, ee.removeAllListeners());
+  assert.strictEqual(ee, ee.removeAllListeners());
 }
 
 {
