@@ -172,7 +172,7 @@ EventEmitter.prototype.once = function(type, listener) {
   return this;
 };
 
-// emits a 'removeListener' event iff the listener was removed
+// emits a 'removeListener' event if the listener was removed
 EventEmitter.prototype.removeListener = function(type, listener) {
   var list, position, length, i;
 
