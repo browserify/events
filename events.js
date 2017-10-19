@@ -218,6 +218,8 @@ EventEmitter.prototype.removeListener = function(type, listener) {
   return this;
 };
 
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+
 EventEmitter.prototype.removeAllListeners = function(type) {
   var key, listeners;
 
