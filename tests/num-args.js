@@ -19,19 +19,32 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+require('./common');
 var assert = require('assert');
 var events = require('../');
 
-var e = new events.EventEmitter(),
-    num_args_emited = [];
+var after_checks = [];
+after(function() {
+  for (var i = 0 ; i < after_checks.length ; ++i) {
+    after_checks[i]();
+  }
+});
+
+var e = new events.EventEmitter();
+var num_args_emitted = [];
 
 e.on('numArgs', function() {
   var numArgs = arguments.length;
-  console.log('numArgs: ' + numArgs);
-  num_args_emited.push(numArgs);
+  num_args_emitted.push(numArgs);
 });
 
-console.log('start');
+e.on('foo', function() {
+  num_args_emitted.push(arguments.length);
+});
+
+e.on('foo', function() {
+  num_args_emitted.push(arguments.length);
+});
 
 e.emit('numArgs');
 e.emit('numArgs', null);
@@ -40,5 +53,17 @@ e.emit('numArgs', null, null, null);
 e.emit('numArgs', null, null, null, null);
 e.emit('numArgs', null, null, null, null, null);
 
-assert.deepEqual([0, 1, 2, 3, 4, 5], num_args_emited);
+e.emit('foo', null, null, null, null);
 
+after_checks.push(function() {
+  assert.ok(Array.isArray(num_args_emitted));
+  assert.strictEqual(num_args_emitted.length, 8);
+  assert.strictEqual(num_args_emitted[0], 0);
+  assert.strictEqual(num_args_emitted[1], 1);
+  assert.strictEqual(num_args_emitted[2], 2);
+  assert.strictEqual(num_args_emitted[3], 3);
+  assert.strictEqual(num_args_emitted[4], 4);
+  assert.strictEqual(num_args_emitted[5], 5);
+  assert.strictEqual(num_args_emitted[6], 4);
+  assert.strictEqual(num_args_emitted[6], 4);
+});

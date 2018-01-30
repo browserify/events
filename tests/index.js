@@ -8,7 +8,7 @@ var require = function(file) {
     test(file, function() {
         orig_require(file);
     });
-}
+};
 
 require('./add-listeners.js');
 require('./check-listener-leaks.js');

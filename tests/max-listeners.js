@@ -19,32 +19,23 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+var common = require('./common');
 var assert = require('assert');
 var events = require('../');
-
-var gotEvent = false;
-
 var e = new events.EventEmitter();
 
-e.on('maxListeners', function() {
-  gotEvent = true;
-});
+e.on('maxListeners', common.mustCall());
 
 // Should not corrupt the 'maxListeners' queue.
 e.setMaxListeners(42);
 
-assert.throws(function() {
-  e.setMaxListeners(NaN);
-});
+var throwsObjs = [NaN, -1, 'and even this'];
+var maxError = /^TypeError: "n" argument must be a positive number$/;
+var defError = /^TypeError: "defaultMaxListeners" must be a positive number$/;
 
-assert.throws(function() {
-  e.setMaxListeners(-1);
-});
-
-assert.throws(function() {
-  e.setMaxListeners("and even this");
+throwsObjs.forEach(function(obj) {
+  assert.throws(function() { e.setMaxListeners(obj); }, maxError);
+  assert.throws(function() { events.defaultMaxListeners = obj; }, defError);
 });
 
 e.emit('maxListeners');
-
-assert(gotEvent);
