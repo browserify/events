@@ -13,7 +13,7 @@ npm install events
 ## Require ##
 
 ```javascript
-var EventEmitter = require('events').EventEmitter
+var EventEmitter = require('events')
 ```
 
 ## Usage ##
