@@ -28,7 +28,7 @@ var mustCallChecks = [];
 function runCallChecks(exitCode) {
   if (exitCode !== 0) return;
 
-  var failed = mustCallChecks.filter(function(context) {
+  var failed = filter(mustCallChecks, function(context) {
     if ('minimum' in context) {
       context.messageSegment = 'at least ' + context.minimum;
       return context.actual < context.minimum;
@@ -38,13 +38,15 @@ function runCallChecks(exitCode) {
     }
   });
 
-  failed.forEach(function(context) {
+  for (var i = 0; i < failed.length; i++) {
+    var context = failed[i];
     console.log('Mismatched %s function calls. Expected %s, actual %d.',
         context.name,
         context.messageSegment,
         context.actual);
-    console.log(context.stack.split('\n').slice(2).join('\n'));
-  });
+    // IE8 has no .stack
+    if (context.stack) console.log(context.stack.split('\n').slice(2).join('\n'));
+  }
 
   assert.strictEqual(failed.length, 0);
 }
@@ -90,3 +92,12 @@ exports.mustNotCall = function(msg) {
     assert.fail(msg || 'function should not have been called');
   };
 };
+
+function filter(arr, fn) {
+  if (arr.filter) return arr.filter(fn);
+  var filtered = [];
+  for (var i = 0; i < arr.length; i++) {
+    if (fn(arr[i], i, arr)) filtered.push(arr[i]);
+  }
+  return filtered
+}

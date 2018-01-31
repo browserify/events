@@ -23,7 +23,9 @@
     "node": ">=0.4.x"
   },
   "devDependencies": {
+    "isarray": "^2.0.2",
     "mocha": "~1.21.4",
+    "object-keys": "^1.0.11",
     "zuul": "~1.10.2"
   },
   "scripts": {

@@ -23,6 +23,7 @@ require('./common');
 var assert = require('assert');
 
 var EventEmitter = require('../').EventEmitter;
+var objectKeys = require('object-keys');
 
 var e = new EventEmitter();
 var fl;  // foo listeners
@@ -30,8 +31,8 @@ var fl;  // foo listeners
 fl = e.listeners('foo');
 assert.ok(Array.isArray(fl));
 assert.strictEqual(fl.length, 0);
-assert.ok(!(e._events instanceof Object));
-assert.strictEqual(Object.keys(e._events).length, 0);
+if (Object.create) assert.ok(!(e._events instanceof Object));
+assert.strictEqual(objectKeys(e._events).length, 0);
 
 e.on('foo', assert.fail);
 fl = e.listeners('foo');
