@@ -1,3 +1,7 @@
+# 1.2.0 (2016-07-26)
+
+  - Enable support for AMD, CommonJS and as browser script.
+
 # 1.1.1 (2016-06-22)
 
   - add more context to errors if they are not instanceof Error
