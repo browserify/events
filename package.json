@@ -24,9 +24,9 @@
   },
   "devDependencies": {
     "isarray": "^2.0.2",
-    "mocha": "~1.21.4",
+    "mocha": "^3.5.3",
     "object-keys": "^1.0.11",
-    "zuul": "~1.10.2"
+    "zuul": "^3.11.1"
   },
   "scripts": {
     "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
