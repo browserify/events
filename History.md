@@ -1,3 +1,15 @@
+# 2.0.0 (2018-02-02)
+
+  - Update to events code from node.js 8.x
+    - Adds `prependListener()` and `prependOnceListener()`
+    - Adds `eventNames()` method
+    - (semver major) Unwrap `once()` listeners in `listeners()`
+  - copy tests from node.js
+
+Note that this version doubles the gzipped size, jumping from 1.1KB to 2.1KB,
+due to new methods and runtime performance improvements. Be aware of that when
+upgrading.
+
 # 1.1.1 (2016-06-22)
 
   - add more context to errors if they are not instanceof Error
