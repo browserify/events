@@ -5,7 +5,7 @@ browsers:
     - name: firefox
       version: latest
     - name: safari
-      version: 5..latest
+      version: 7..latest
     - name: iphone
       version: latest
     - name: ie
