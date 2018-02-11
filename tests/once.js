@@ -72,10 +72,9 @@ assert.throws(function() {
       var restArgs = args.slice(1);
       assert.ok(Array.isArray(params));
       assert.strictEqual(params.length, restArgs.length);
-      for (var index = 0; index < params.length; index++) {
-        var param = params[index];
+      params.forEach(function(param, index) {
         assert.strictEqual(param, restArgs[index]);
-      }
+      });
   	}));
 
     EventEmitter.prototype.emit.apply(ee, args);

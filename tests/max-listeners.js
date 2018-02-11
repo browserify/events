@@ -24,9 +24,6 @@ var assert = require('assert');
 var events = require('../');
 var e = new events.EventEmitter();
 
-var hasDefineProperty = !!Object.defineProperty;
-try { Object.defineProperty({}, 'x', { value: 0 }); } catch (err) { hasDefineProperty = false }
-
 e.on('maxListeners', common.mustCall());
 
 // Should not corrupt the 'maxListeners' queue.
@@ -36,12 +33,9 @@ var throwsObjs = [NaN, -1, 'and even this'];
 var maxError = /^TypeError: "n" argument must be a positive number$/;
 var defError = /^TypeError: "defaultMaxListeners" must be a positive number$/;
 
-for (var i = 0; i < throwsObjs.length; i++) {
-  var obj = throwsObjs[i];
+throwsObjs.forEach(function(obj) {
   assert.throws(function() { e.setMaxListeners(obj); }, maxError);
-  if (hasDefineProperty) {
-    assert.throws(function() { events.defaultMaxListeners = obj; }, defError);
-  }
-}
+  assert.throws(function() { events.defaultMaxListeners = obj; }, defError);
+});
 
 e.emit('maxListeners');
