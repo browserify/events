@@ -474,7 +474,7 @@ function listenerCount(type) {
 }
 
 EventEmitter.prototype.eventNames = function eventNames() {
-  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
+  return this._eventsCount > 0 ? objectKeys(this._events) : [];
 };
 
 // About 1.5x faster than the two-arg version of Array#splice().
