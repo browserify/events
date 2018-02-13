@@ -473,8 +473,11 @@ function listenerCount(type) {
   return 0;
 }
 
+var ownKeys = Object.getOwnPropertySymbols ? function(obj) {
+  return Object.getOwnPropertyNames(obj).concat(Object.getOwnPropertySymbols(obj));
+} : objectKeys;
 EventEmitter.prototype.eventNames = function eventNames() {
-  return this._eventsCount > 0 ? objectKeys(this._events) : [];
+  return this._eventsCount > 0 ? ownKeys(this._events) : [];
 };
 
 // About 1.5x faster than the two-arg version of Array#splice().
