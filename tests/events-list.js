@@ -14,9 +14,9 @@ EE.removeListener('bar', m);
 assert.deepStrictEqual(['foo'], EE.eventNames());
 
 if (typeof Symbol !== 'undefined') {
-    var s = Symbol('s');
-    EE.on(s, m);
-    assert.deepStrictEqual(['foo', s], EE.eventNames());
-    EE.removeListener(s, m);
-    assert.deepStrictEqual(['foo'], EE.eventNames());
+  var s = Symbol('s');
+  EE.on(s, m);
+  assert.deepStrictEqual(['foo', s], EE.eventNames());
+  EE.removeListener(s, m);
+  assert.deepStrictEqual(['foo'], EE.eventNames());
 }

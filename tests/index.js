@@ -21,6 +21,7 @@ require('./modify-in-emit.js');
 require('./num-args.js');
 require('./once.js');
 require('./set-max-listeners-side-effects.js');
+require('./special-event-names.js');
 require('./subclass.js');
 require('./remove-all-listeners.js');
 require('./remove-listeners.js');
