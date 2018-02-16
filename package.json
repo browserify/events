@@ -29,7 +29,8 @@
     "zuul": "^3.11.1"
   },
   "scripts": {
-    "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
+    "test": "mocha --ui qunit -- tests/index.js",
+    "test:browsers": "zuul -- tests/index.js"
   },
   "license": "MIT"
 }
