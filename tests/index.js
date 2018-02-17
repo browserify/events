@@ -1,3 +1,4 @@
+var test = require('tape');
 
 require('./legacy-compat');
 
@@ -5,8 +6,9 @@ require('./legacy-compat');
 // and also have browserify be able to statically analyze this file
 var orig_require = require;
 var require = function(file) {
-    test(file, function() {
-        orig_require(file);
+    test(file, function(t) {
+        try { orig_require(file); } catch (err) { t.fail(err); }
+        t.end();
     });
 };
 

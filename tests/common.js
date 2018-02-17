@@ -19,6 +19,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+var test = require('tape');
 var assert = require('assert');
 
 var noop = function() {};
@@ -77,7 +78,7 @@ function _mustCallInner(fn, criteria, field) {
   context[field] = criteria;
 
   // add the exit listener only once to avoid listener leak warnings
-  if (mustCallChecks.length === 0) after(function() { runCallChecks(0); });
+  if (mustCallChecks.length === 0) test.onFinish(function() { runCallChecks(0); });
 
   mustCallChecks.push(context);
 

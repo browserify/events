@@ -23,13 +23,6 @@ require('./common');
 var assert = require('assert');
 var events = require('../');
 
-var after_checks = [];
-after(function() {
-  for (var i = 0 ; i < after_checks.length ; ++i) {
-    after_checks[i]();
-  }
-});
-
 var e = new events.EventEmitter();
 var num_args_emitted = [];
 
@@ -55,15 +48,13 @@ e.emit('numArgs', null, null, null, null, null);
 
 e.emit('foo', null, null, null, null);
 
-after_checks.push(function() {
-  assert.ok(Array.isArray(num_args_emitted));
-  assert.strictEqual(num_args_emitted.length, 8);
-  assert.strictEqual(num_args_emitted[0], 0);
-  assert.strictEqual(num_args_emitted[1], 1);
-  assert.strictEqual(num_args_emitted[2], 2);
-  assert.strictEqual(num_args_emitted[3], 3);
-  assert.strictEqual(num_args_emitted[4], 4);
-  assert.strictEqual(num_args_emitted[5], 5);
-  assert.strictEqual(num_args_emitted[6], 4);
-  assert.strictEqual(num_args_emitted[6], 4);
-});
+assert.ok(Array.isArray(num_args_emitted));
+assert.strictEqual(num_args_emitted.length, 8);
+assert.strictEqual(num_args_emitted[0], 0);
+assert.strictEqual(num_args_emitted[1], 1);
+assert.strictEqual(num_args_emitted[2], 2);
+assert.strictEqual(num_args_emitted[3], 3);
+assert.strictEqual(num_args_emitted[4], 4);
+assert.strictEqual(num_args_emitted[5], 5);
+assert.strictEqual(num_args_emitted[6], 4);
+assert.strictEqual(num_args_emitted[6], 4);

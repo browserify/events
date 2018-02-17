@@ -24,11 +24,11 @@
   },
   "devDependencies": {
     "isarray": "^2.0.2",
-    "mocha": "^3.5.3",
+    "tape": "^4.8.0",
     "zuul": "^3.11.1"
   },
   "scripts": {
-    "test": "mocha --ui qunit -- tests/index.js",
+    "test": "node tests/index.js",
     "test:browsers": "zuul -- tests/index.js"
   },
   "license": "MIT"
