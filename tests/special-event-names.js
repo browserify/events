@@ -16,6 +16,7 @@ ee.on('__proto__', handler);
 ee.on('__defineGetter__', handler);
 ee.on('toString', handler);
 
+console.log(ee.eventNames().join(','))
 assert.strictEqual(ee.eventNames().length, 3);
 assert.strictEqual(ee.eventNames()[0], '__proto__');
 assert.strictEqual(ee.eventNames()[1], '__defineGetter__');
