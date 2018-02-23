@@ -1,4 +1,3 @@
-ui: tape
 concurrency: 1
 browsers:
     - name: chrome

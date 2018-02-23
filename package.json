@@ -23,13 +23,13 @@
     "node": ">=0.8.x"
   },
   "devDependencies": {
+    "airtap": "0.0.5",
     "isarray": "^2.0.2",
-    "tape": "^4.8.0",
-    "zuul": "^3.11.1"
+    "tape": "^4.8.0"
   },
   "scripts": {
     "test": "node tests/index.js",
-    "test:browsers": "zuul -- tests/index.js"
+    "test:browsers": "airtap tests/index.js"
   },
   "license": "MIT"
 }
