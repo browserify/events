@@ -24,8 +24,8 @@ assert.strictEqual(ee.listeners('__defineGetter__')[0], handler);
 assert.strictEqual(ee.listeners('toString').length, 1);
 assert.strictEqual(ee.listeners('toString')[0], handler);
 
-// Disable __proto__ tests in IE8
-if (typeof navigator === 'undefined' || !/MSIE 8/.test(navigator.userAgent)) {
+// Only run __proto__ tests if that property can actually be set
+if ({ __proto__: 'ok' }.__proto__ === 'ok') {
   assert.strictEqual(ee.eventNames().length, 3);
   assert.strictEqual(ee.eventNames()[2], '__proto__');
   assert.strictEqual(ee.listeners('__proto__').length, 1);
