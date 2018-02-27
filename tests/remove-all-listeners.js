@@ -36,10 +36,9 @@ function expect(expected) {
     var sortedActual = actual.sort();
     var sortedExpected = expected.sort();
     assert.strictEqual(sortedActual.length, sortedExpected.length);
-    for (var index = 0; index < sortedActual.length; index++) {
-      var value = sortedActual[index];
+    sortedActual.forEach(function(value, index) {
       assert.strictEqual(value, sortedExpected[index]);
-    }
+    });
   });
   function listener(name) {
     actual.push(name);
@@ -110,7 +109,7 @@ function expect(expected) {
   // Check for regression where removeAllListeners() throws when
   // there exists a 'removeListener' listener, but there exists
   // no listeners for the provided event type.
-  assert.doesNotThrow(function () { ee.removeAllListeners(ee, 'foo') });
+  assert.doesNotThrow(ee.removeAllListeners.bind(ee, 'foo'));
 }
 
 {
