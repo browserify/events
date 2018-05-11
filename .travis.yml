@@ -8,6 +8,8 @@ script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_NODE_VERSION}" = "stable" ]; then npm run test:browsers; fi
 addons:
   sauce_connect: true
+  hosts:
+    - airtap.local
 env:
   global:
   - secure: XcBiD8yReflut9q7leKsigDZ0mI3qTKH+QrNVY8DaqlomJOZw8aOrVuX9Jz12l86ZJ41nbxmKnRNkFzcVr9mbP9YaeTb3DpeOBWmvaoSfud9Wnc16VfXtc1FCcwDhSVcSiM3UtnrmFU5cH+Dw1LPh5PbfylYOS/nJxUvG0FFLqI=
