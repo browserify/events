@@ -33,8 +33,8 @@ e.on('maxListeners', common.mustCall());
 e.setMaxListeners(42);
 
 var throwsObjs = [NaN, -1, 'and even this'];
-var maxError = /^TypeError: "n" argument must be a positive number$/;
-var defError = /^TypeError: "defaultMaxListeners" must be a positive number$/;
+var maxError = /^RangeError: The value of "n" is out of range\. It must be a non-negative number\./;
+var defError = /^RangeError: The value of "defaultMaxListeners" is out of range\. It must be a non-negative number\./;
 
 for (var i = 0; i < throwsObjs.length; i++) {
   var obj = throwsObjs[i];

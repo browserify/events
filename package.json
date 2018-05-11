@@ -20,7 +20,7 @@
   },
   "main": "./events.js",
   "engines": {
-    "node": ">=0.4.x"
+    "node": ">=0.8.x"
   },
   "devDependencies": {
     "isarray": "^2.0.2",
