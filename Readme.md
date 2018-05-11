@@ -4,18 +4,24 @@
 
 Node's event emitter for all engines.
 
-## Install ##
+## Install
 
 ```
 npm install events
 ```
 
-## Require ##
+## Usage
 
 ```javascript
 var EventEmitter = require('events')
 ```
 
-## Usage ##
+Note that the `events` module uses ES5 features. If you need to support very old browsers like IE8, use a shim like [`es5-shim`](https://www.npmjs.com/package/es5-shim). You need both the shim and the sham versions of `es5-shim`.
 
-See the [node.js event emitter docs](http://nodejs.org/api/events.html)
+## API
+
+See the [Node.js EventEmitter docs](http://nodejs.org/api/events.html). `events` currently matches the Node.js 10.1 API.
+
+## License
+
+[MIT](./LICENSE)
