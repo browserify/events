@@ -12,14 +12,18 @@ var require = function(file) {
 
 require('./add-listeners.js');
 require('./check-listener-leaks.js');
+require('./errors.js');
 require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
 require('./max-listeners.js');
+require('./method-names.js');
 require('./modify-in-emit.js');
 require('./num-args.js');
 require('./once.js');
+require('./prepend.js');
 require('./set-max-listeners-side-effects.js');
 require('./subclass.js');
+if (typeof Symbol === 'function') require('./symbols.js');
 require('./remove-all-listeners.js');
 require('./remove-listeners.js');

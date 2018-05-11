@@ -23,7 +23,6 @@ var common = require('./common');
 var assert = require('assert');
 var EventEmitter = require('../').EventEmitter;
 var util = require('util');
-var objectKeys = require('object-keys');
 
 var after_checks = [];
 after(function() {
@@ -54,8 +53,8 @@ assert.throws(function() {
 }, /blerg/);
 
 after_checks.push(function() {
-  if (Object.create) assert.ok(!(myee._events instanceof Object));
-  assert.strictEqual(objectKeys(myee._events).length, 0);
+  assert.ok(!(myee._events instanceof Object));
+  assert.strictEqual(Object.keys(myee._events).length, 0);
 });
 
 
