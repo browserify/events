@@ -19,13 +19,23 @@ require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
 require('./max-listeners.js');
-require('./method-names.js');
+if ((function A () {}).name === 'A') {
+  require('./method-names.js');
+} else {
+  // Function.name is not supported in IE
+  test('./method-names.js', { skip: true }, function () {});
+}
 require('./modify-in-emit.js');
 require('./num-args.js');
 require('./once.js');
 require('./prepend.js');
 require('./set-max-listeners-side-effects.js');
 require('./subclass.js');
-if (typeof Symbol === 'function') require('./symbols.js');
+if (typeof Symbol === 'function') {
+  require('./symbols.js');
+} else {
+  // Symbol is not available.
+  test('./symbols.js', { skip: true }, function () {});
+}
 require('./remove-all-listeners.js');
 require('./remove-listeners.js');
