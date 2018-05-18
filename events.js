@@ -30,6 +30,9 @@ function ReflectOwnKeys(target) {
 function ProcessEmitWarning(warning) {
   if (console && console.warn) console.warn(warning);
 }
+var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
+  return value !== value;
+}
 
 function EventEmitter() {
   EventEmitter.init.call(this);
@@ -53,7 +56,7 @@ Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
     return defaultMaxListeners;
   },
   set: function(arg) {
-    if (typeof arg !== 'number' || arg < 0 || Number.isNaN(arg)) {
+    if (typeof arg !== 'number' || arg < 0 || NumberIsNaN(arg)) {
       throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + '.');
     }
     defaultMaxListeners = arg;
@@ -74,7 +77,7 @@ EventEmitter.init = function() {
 // Obviously not all Emitters should be limited to 10. This function allows
 // that to be increased. Set to zero for unlimited.
 EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
-  if (typeof n !== 'number' || n < 0 || Number.isNaN(n)) {
+  if (typeof n !== 'number' || n < 0 || NumberIsNaN(n)) {
     throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n + '.');
   }
   this._maxListeners = n;
