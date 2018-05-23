@@ -195,9 +195,9 @@ EventEmitter.prototype.emit = function emit(type) {
           args[i - 1] = arguments[i];
         emitMany(handler, isFn, this, args);
     }
-    if (!universalHandler) //just no universal handler
+    if (!universalHandler || type == '*') //just no universal handler
       return true; //true, because at least one normal handler was triggered
-      
+
   } else if (!universalHandler) { //no handler and universal handlers
     return false; //false, because no normal handler was triggered
   }
