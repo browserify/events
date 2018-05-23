@@ -169,35 +169,65 @@ EventEmitter.prototype.emit = function emit(type) {
   }
 
   handler = events[type];
+  var universalHandler = events['*'];
 
-  if (!handler)
-    return false;
+  if (handler) {
+    var isFn = typeof handler === 'function';
+    len = arguments.length;
+    switch (len) {
+        // fast cases
+      case 1:
+        emitNone(handler, isFn, this);
+        break;
+      case 2:
+        emitOne(handler, isFn, this, arguments[1]);
+        break;
+      case 3:
+        emitTwo(handler, isFn, this, arguments[1], arguments[2]);
+        break;
+      case 4:
+        emitThree(handler, isFn, this, arguments[1], arguments[2], arguments[3]);
+        break;
+        // slower
+      default:
+        args = new Array(len - 1);
+        for (i = 1; i < len; i++)
+          args[i - 1] = arguments[i];
+        emitMany(handler, isFn, this, args);
+    }
+    if (!universalHandler) //just no universal handler
+      return true; //true, because at least one normal handler was triggered
+      
+  } else if (!universalHandler) { //no handler and universal handlers
+    return false; //false, because no normal handler was triggered
+  }
 
-  var isFn = typeof handler === 'function';
+
+
+  //execution of universal handler ('*')
+  var isFn = typeof universalHandler === 'function';
   len = arguments.length;
-  switch (len) {
+  switch (len+1) {
       // fast cases
-    case 1:
-      emitNone(handler, isFn, this);
-      break;
     case 2:
-      emitOne(handler, isFn, this, arguments[1]);
+      emitOne(universalHandler, isFn, this, type);
       break;
     case 3:
-      emitTwo(handler, isFn, this, arguments[1], arguments[2]);
+      emitTwo(universalHandler, isFn, this, type, arguments[1]);
       break;
     case 4:
-      emitThree(handler, isFn, this, arguments[1], arguments[2], arguments[3]);
+      emitThree(universalHandler, isFn, this, type, arguments[1], arguments[2]);
       break;
       // slower
     default:
-      args = new Array(len - 1);
-      for (i = 1; i < len; i++)
-        args[i - 1] = arguments[i];
-      emitMany(handler, isFn, this, args);
+    args = new Array(len);
+    for (i = 0; i < len; i++)
+      args[i] = arguments[i];
+    emitMany(universalHandler, isFn, this, args);
   }
 
-  return true;
+  if(handler) {return true}
+  else {return false}
 };
 
 function _addListener(target, type, listener, prepend) {
