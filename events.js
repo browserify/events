@@ -138,20 +138,35 @@ EventEmitter.prototype.emit = function emit(type) {
   }
 
   var handler = events[type];
+  var universalHandler = events['*'];
 
-  if (handler === undefined)
-    return false;
-
-  if (typeof handler === 'function') {
-    ReflectApply(handler, this, args);
-  } else {
-    var len = handler.length;
-    var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      ReflectApply(listeners[i], this, args);
+  //trigger normal listeners
+  if (handler && type != '*'){
+    if (typeof handler === 'function') {
+      ReflectApply(handler, this, args);
+    } else {
+      var len = handler.length;
+      var listeners = arrayClone(handler, len);
+      for (var i = 0; i < len; ++i)
+        ReflectApply(listeners[i], this, args);
+    }
   }
 
-  return true;
+  //trigger universal listeners
+  if(universalHandler){
+    args.unshift(type);
+    if (typeof universalHandler === 'function') {
+      ReflectApply(universalHandler, this, args);
+    } else {
+      var len = universalHandler.length;
+      var listeners = arrayClone(universalHandler, len);
+      for (var i = 0; i < len; ++i)
+        ReflectApply(listeners[i], this, args);
+    }
+  }
+
+  if(handler) {return true}
+  else {return false}
 };
 
 function _addListener(target, type, listener, prepend) {
