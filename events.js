@@ -21,15 +21,31 @@
 
 'use strict';
 
-function ReflectApply(target, receiver, args) {
-  return Function.prototype.apply.call(target, receiver, args);
+var R = typeof Reflect === 'object' ? Reflect : null
+var ReflectApply = R && typeof R.apply === 'function'
+  ? R.apply
+  : function ReflectApply(target, receiver, args) {
+    return Function.prototype.apply.call(target, receiver, args);
+  }
+
+var ReflectOwnKeys
+if (R && typeof R.ownKeys === 'function') {
+  ReflectOwnKeys = R.ownKeys
+} else if (Object.getOwnPropertySymbols) {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target)
+      .concat(Object.getOwnPropertySymbols(target));
+  };
+} else {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target);
+  };
 }
-function ReflectOwnKeys(target) {
-  return Object.getOwnPropertyNames(target);
-}
+
 function ProcessEmitWarning(warning) {
   if (console && console.warn) console.warn(warning);
 }
+
 var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
   return value !== value;
 }

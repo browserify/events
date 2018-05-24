@@ -15,6 +15,7 @@ var require = function(file) {
 require('./add-listeners.js');
 require('./check-listener-leaks.js');
 require('./errors.js');
+require('./events-list.js');
 require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
@@ -30,6 +31,7 @@ require('./num-args.js');
 require('./once.js');
 require('./prepend.js');
 require('./set-max-listeners-side-effects.js');
+require('./special-event-names.js');
 require('./subclass.js');
 if (typeof Symbol === 'function') {
   require('./symbols.js');
