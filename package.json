@@ -23,7 +23,7 @@
     "node": ">=0.8.x"
   },
   "devDependencies": {
-    "airtap": "0.0.5",
+    "airtap": "0.0.6",
     "isarray": "^2.0.2",
     "tape": "^4.8.0"
   },
