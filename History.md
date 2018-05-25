@@ -1,3 +1,15 @@
+# 3.0.0 (2018-05-25)
+
+**This version drops support for IE8.** `events` no longer includes polyfills
+for ES5 features. If you need to support older environments, use an ES5 shim
+like [es5-shim](https://npmjs.com/package/es5-shim). Both the shim and sham
+versions of es5-shim are necessary.
+
+  - Update to events code from Node.js 10.x
+    - (semver major) Adds `off()` method
+  - Port more tests from Node.js
+  - Switch browser tests to airtap, making things more reliable
+
 # 2.1.0 (2018-05-25)
 
   - add Emitter#rawListeners from Node.js v9.4
