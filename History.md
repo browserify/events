@@ -1,3 +1,7 @@
+# 2.1.0 (2018-05-25)
+
+  - add Emitter#rawListeners from Node.js v9.4
+
 # 2.0.0 (2018-02-02)
 
   - Update to events code from node.js 8.x
