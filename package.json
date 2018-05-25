@@ -20,17 +20,16 @@
   },
   "main": "./events.js",
   "engines": {
-    "node": ">=0.4.x"
+    "node": ">=0.8.x"
   },
   "devDependencies": {
+    "airtap": "0.0.6",
     "isarray": "^2.0.2",
-    "mocha": "^3.5.3",
-    "object-keys": "^1.0.11",
-    "zuul": "^3.11.1"
+    "tape": "^4.8.0"
   },
   "scripts": {
-    "test": "mocha --ui qunit -- tests/index.js",
-    "test:browsers": "zuul -- tests/index.js"
+    "test": "node tests/index.js",
+    "test:browsers": "airtap -- tests/index.js"
   },
   "license": "MIT"
 }

@@ -22,11 +22,10 @@
 require('./common');
 var assert = require('assert');
 var events = require('../');
-var objectKeys = require('object-keys');
 
 var e = new events.EventEmitter();
 
 if (Object.create) assert.ok(!(e._events instanceof Object));
-assert.strictEqual(objectKeys(e._events).length, 0);
+assert.strictEqual(Object.keys(e._events).length, 0);
 e.setMaxListeners(5);
-assert.strictEqual(objectKeys(e._events).length, 0);
+assert.strictEqual(Object.keys(e._events).length, 0);

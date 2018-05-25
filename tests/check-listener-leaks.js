@@ -23,6 +23,14 @@ var common = require('./common');
 var assert = require('assert');
 var events = require('../');
 
+// Redirect warning output to tape.
+var consoleWarn = console.warn;
+console.warn = common.test.comment;
+
+common.test.on('end', function () {
+  console.warn = consoleWarn;
+});
+
 // default
 {
   var e = new events.EventEmitter();

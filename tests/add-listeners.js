@@ -108,4 +108,4 @@ assert.throws(function() {
   var ee = new EventEmitter();
 
   ee.on('foo', null);
-}, /^TypeError: "listener" argument must be a function$/);
+}, /^TypeError: The "listener" argument must be of type Function. Received type object$/);

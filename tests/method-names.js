@@ -19,29 +19,17 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var common = require('./common');
+'use strict';
+require('./common');
 var assert = require('assert');
 var events = require('../');
-var e = new events.EventEmitter();
 
-var hasDefineProperty = !!Object.defineProperty;
-try { Object.defineProperty({}, 'x', { value: 0 }); } catch (err) { hasDefineProperty = false }
-
-e.on('maxListeners', common.mustCall());
-
-// Should not corrupt the 'maxListeners' queue.
-e.setMaxListeners(42);
-
-var throwsObjs = [NaN, -1, 'and even this'];
-var maxError = /^RangeError: The value of "n" is out of range\. It must be a non-negative number\./;
-var defError = /^RangeError: The value of "defaultMaxListeners" is out of range\. It must be a non-negative number\./;
-
-for (var i = 0; i < throwsObjs.length; i++) {
-  var obj = throwsObjs[i];
-  assert.throws(function() { e.setMaxListeners(obj); }, maxError);
-  if (hasDefineProperty) {
-    assert.throws(function() { events.defaultMaxListeners = obj; }, defError);
-  }
-}
-
-e.emit('maxListeners');
+var E = events.EventEmitter.prototype;
+assert.strictEqual(E.constructor.name, 'EventEmitter');
+assert.strictEqual(E.on, E.addListener);  // Same method.
+assert.strictEqual(E.off, E.removeListener);  // Same method.
+Object.getOwnPropertyNames(E).forEach(function(name) {
+  if (name === 'constructor' || name === 'on' || name === 'off') return;
+  if (typeof E[name] !== 'function') return;
+  assert.strictEqual(E[name].name, name);
+});
