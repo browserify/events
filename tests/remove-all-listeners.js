@@ -22,7 +22,7 @@
 var common = require('./common');
 var assert = require('assert');
 var events = require('../');
-var test = require('tape');
+var test = common.tape;
 
 function expect(expected) {
   var actual = [];

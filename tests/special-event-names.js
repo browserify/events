@@ -41,5 +41,5 @@ if ({ __proto__: 'ok' }.__proto__ === 'ok') {
   }));
   process.emit('__proto__', 1);
 } else {
-  console.log('# skipped __proto__')
+  common.test.comment('skipped __proto__')
 }

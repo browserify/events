@@ -19,8 +19,12 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-var test = require('tape');
+var test = typeof navigator !== 'undefined' && navigator.userAgent.indexOf('MSIE 8.0') !== -1
+  ? require('../old-tape')
+  : require('tape');
 var assert = require('assert');
+
+exports.tape = test;
 
 var noop = function() {};
 

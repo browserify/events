@@ -24,8 +24,8 @@ var assert = require('assert');
 var events = require('../');
 var e = new events.EventEmitter();
 
-var hasDefineProperty = !!Object.defineProperty;
-try { Object.defineProperty({}, 'x', { value: 0 }); } catch (err) { hasDefineProperty = false }
+var supportsGetterProperties = !!Object.defineProperty;
+try { Object.defineProperty({}, 'x', { get: function () {} }); } catch (err) { supportsGetterProperties = false }
 
 e.on('maxListeners', common.mustCall());
 
@@ -39,7 +39,7 @@ var defError = /^RangeError: The value of "defaultMaxListeners" is out of range\
 for (var i = 0; i < throwsObjs.length; i++) {
   var obj = throwsObjs[i];
   assert.throws(function() { e.setMaxListeners(obj); }, maxError);
-  if (hasDefineProperty) {
+  if (supportsGetterProperties) {
     assert.throws(function() { events.defaultMaxListeners = obj; }, defError);
   }
 }

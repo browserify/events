@@ -1,7 +1,6 @@
-var test = require('tape');
-
 require('./legacy-compat');
 var common = require('./common');
+var test = common.tape;
 
 // we do this to easily wrap each file in a mocha test
 // and also have browserify be able to statically analyze this file
@@ -13,6 +12,7 @@ var require = function(file) {
         common.test = t;
 
         try { orig_require(file); } catch (err) { t.fail(err); }
+        t.pass('passed')
         t.end();
     });
 };

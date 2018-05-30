@@ -20,7 +20,7 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var common = require('./common');
-var test = require('tape');
+var test = common.tape;
 var assert = require('assert');
 var EventEmitter = require('../').EventEmitter;
 var util = require('util');
