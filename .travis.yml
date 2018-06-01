@@ -6,6 +6,7 @@ node_js:
 script:
   - npm test
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_NODE_VERSION}" = "stable" ]; then npm run test:browsers; fi
+  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_NODE_VERSION}" = "stable" ]; then npm run test:ie8 || true; fi
 addons:
   sauce_connect: true
   hosts:

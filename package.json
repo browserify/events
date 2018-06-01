@@ -29,7 +29,8 @@
   },
   "scripts": {
     "test": "node tests/index.js",
-    "test:browsers": "airtap -- tests/index.js"
+    "test:browsers": "airtap -- tests/index.js",
+    "test:ie8": "node ./bin/airtap-ie8"
   },
   "license": "MIT"
 }

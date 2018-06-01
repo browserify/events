@@ -10,6 +10,6 @@ browsers:
   # - name: iphone
   #   version: latest
   - name: ie
-    version: 8..latest
+    version: 9..latest
   # - name: microsoftedge
   #   version: 13..latest
