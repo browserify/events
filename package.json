@@ -19,6 +19,7 @@
     "url": "http://github.com/Gozala/events/issues/"
   },
   "main": "./events.js",
+  "module": "./events.js",
   "engines": {
     "node": ">=0.8.x"
   },
