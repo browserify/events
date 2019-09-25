@@ -43,7 +43,7 @@ if (R && typeof R.ownKeys === 'function') {
 }
 
 function ProcessEmitWarning(warning) {
-  if (console && console.warn) console.warn(warning);
+  if (console && console.warn && __DEV__) console.warn(warning);
 }
 
 var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
