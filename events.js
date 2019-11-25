@@ -116,6 +116,14 @@ EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
   return $getMaxListeners(this);
 };
 
+function rethrowToConsole(er) {
+  setTimeout(function() {
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event  }, 0);
+  }, 0);
+}
+
 EventEmitter.prototype.emit = function emit(type) {
   var args = [];
   for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
@@ -133,16 +141,13 @@ EventEmitter.prototype.emit = function emit(type) {
     if (args.length > 0)
       er = args[0];
     if (er instanceof Error) {
-      // Note: The comments on the `throw` lines are intentional, they show
-      // up in Node's output if this results in an unhandled exception.
-      throw er; // Unhandled 'error' event
+      rethrowToConsole(er);
+      return;
     }
     // At least give some kind of context to the user
     var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
     err.context = er;
-    setTimeout(function() {
-      throw err;
-    }, 0);
+    rethrowToConsole(err);
     return;
   }
 
