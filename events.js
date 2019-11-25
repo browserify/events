@@ -140,7 +140,10 @@ EventEmitter.prototype.emit = function emit(type) {
     // At least give some kind of context to the user
     var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
     err.context = er;
-    throw err; // Unhandled 'error' event
+    setTimeout(function() {
+      throw err;
+    }, 0);
+    return;
   }
 
   var handler = events[type];
