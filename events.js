@@ -239,7 +239,7 @@ function onceWrapper() {
   if (!this.fired) {
     this.target.removeListener(this.type, this.wrapFn);
     this.fired = true;
-    ReflectApply(this.listener, this.target, args);
+    return ReflectApply(this.listener, this.target, args);
   }
 }
 
