@@ -21,6 +21,9 @@ require('./add-listeners.js');
 require('./check-listener-leaks.js');
 require('./errors.js');
 require('./events-list.js');
+if (typeof Promise === 'function') {
+  require('./events-once.js');
+}
 require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
