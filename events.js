@@ -234,12 +234,12 @@ EventEmitter.prototype.prependListener =
     };
 
 function onceWrapper() {
-  var args = [];
-  for (var i = 0; i < arguments.length; i++) args.push(arguments[i]);
   if (!this.fired) {
     this.target.removeListener(this.type, this.wrapFn);
     this.fired = true;
-    return ReflectApply(this.listener, this.target, args);
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
   }
 }
 
