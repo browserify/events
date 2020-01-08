@@ -1,7 +1,7 @@
 {
   "name": "events",
   "id": "events",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Node's event emitter for all engines.",
   "keywords": [
     "events",
