@@ -8,7 +8,7 @@ var assert = require('assert');
 function onceAnEvent() {
   var ee = new EventEmitter();
 
-  process.nextTick(() => {
+  process.nextTick(function () {
     ee.emit('myevent', 42);
   });
 
@@ -23,7 +23,7 @@ function onceAnEvent() {
 function onceAnEventWithTwoArgs() {
   var ee = new EventEmitter();
 
-  process.nextTick(() => {
+  process.nextTick(function () {
     ee.emit('myevent', 42, 24);
   });
 
@@ -55,7 +55,7 @@ async function stopListeningAfterCatchingError() {
 
   var expected = new Error('kaboom');
   var err;
-  process.nextTick(() => {
+  process.nextTick(function () {
     ee.emit('error', expected);
     ee.emit('myevent', 42, 24);
   });
@@ -74,7 +74,7 @@ function onceError() {
   var ee = new EventEmitter();
 
   var expected = new Error('kaboom');
-  process.nextTick(() => {
+  process.nextTick(function () {
     ee.emit('error', expected);
   });
 
