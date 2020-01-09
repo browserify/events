@@ -50,7 +50,7 @@ function catchesErrors() {
   });
 }
 
-async function stopListeningAfterCatchingError() {
+function stopListeningAfterCatchingError() {
   var ee = new EventEmitter();
 
   var expected = new Error('kaboom');
