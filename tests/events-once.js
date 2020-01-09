@@ -28,7 +28,9 @@ function onceAnEventWithTwoArgs() {
   });
 
   return once(ee, 'myevent').then(function (value) {
-    assert.deepStrictEqual(value, [42, 24]);
+    assert.strictEqual(value.length, 2);
+    assert.strictEqual(value[0], 42);
+    assert.strictEqual(value[1], 24);
   });
 }
 
