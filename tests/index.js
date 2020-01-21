@@ -8,11 +8,15 @@ var common = require('./common');
 var orig_require = require;
 var require = function(file) {
     test(file, function(t) {
+        t.plan(1);
         // Store the tape object so tests can access it.
         t.on('end', function () { delete common.test; });
         common.test = t;
 
-        try { orig_require(file); } catch (err) { t.fail(err); }
+        try {
+          orig_require(file);
+          t.pass(file);
+        } catch (err) { t.fail(err); }
         t.end();
     });
 };
