@@ -1,4 +1,6 @@
 var test = require('tape');
+var functionsHaveNames = require('functions-have-names');
+var hasSymbols = require('has-symbols');
 
 require('./legacy-compat');
 var common = require('./common');
@@ -25,7 +27,7 @@ require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
 require('./max-listeners.js');
-if ((function A () {}).name === 'A') {
+if (functionsHaveNames()) {
   require('./method-names.js');
 } else {
   // Function.name is not supported in IE
@@ -38,7 +40,7 @@ require('./prepend.js');
 require('./set-max-listeners-side-effects.js');
 require('./special-event-names.js');
 require('./subclass.js');
-if (typeof Symbol === 'function') {
+if (hasSymbols()) {
   require('./symbols.js');
 } else {
   // Symbol is not available.
