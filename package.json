@@ -23,11 +23,11 @@
     "node": ">=0.8.x"
   },
   "devDependencies": {
-    "airtap": "^1.0.0",
+    "airtap": "^3.0.0",
     "functions-have-names": "^1.2.1",
     "has-symbols": "^1.0.1",
-    "isarray": "^2.0.2",
-    "tape": "^4.8.0"
+    "isarray": "^2.0.5",
+    "tape": "^5.0.0"
   },
   "scripts": {
     "test": "node tests/index.js",
