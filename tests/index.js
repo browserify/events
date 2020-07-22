@@ -23,6 +23,12 @@ require('./add-listeners.js');
 require('./check-listener-leaks.js');
 require('./errors.js');
 require('./events-list.js');
+if (typeof Promise === 'function') {
+  require('./events-once.js');
+} else {
+  // Promise support is not available.
+  test('./events-once.js', { skip: true }, function () {});
+}
 require('./listener-count.js');
 require('./listeners-side-effects.js');
 require('./listeners.js');
