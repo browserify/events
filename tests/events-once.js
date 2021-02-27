@@ -158,7 +158,8 @@ function onceWithEventTargetTwoArgs() {
     et.dispatchEvent('myevent', 42, 24);
   });
   return once(et, 'myevent').then(function (value) {
-    assert.deepStrictEqual(value, [42, 24]);
+    assert.strictEqual(value[0], 42);
+    assert.strictEqual(value[1], 24);
   });
 }
 
@@ -170,7 +171,7 @@ function onceWithEventTargetError() {
   });
   return once(et, 'error').then(function (args) {
     var error = args[0];
-    assert.deepStrictEqual(error, expected);
+    assert.strictEqual(error, expected);
     assert.strictEqual(has(et.events, 'error'), false);
   });
 }
