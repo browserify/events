@@ -198,7 +198,7 @@ try {
 } catch (err) {}
 
 if (hasBrowserEventTarget) {
-  function onceWithBrowserEventTarget() {
+  var onceWithBrowserEventTarget = function onceWithBrowserEventTarget() {
     var et = new window.EventTarget();
     var event = new window.Event('myevent');
     process.nextTick(function () {
@@ -211,7 +211,7 @@ if (hasBrowserEventTarget) {
     });
   }
 
-  function onceWithBrowserEventTargetError() {
+  var onceWithBrowserEventTargetError = function onceWithBrowserEventTargetError() {
     var et = new window.EventTarget();
     var error = new window.Event('error');
     process.nextTick(function () {
