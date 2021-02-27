@@ -24,6 +24,7 @@
   "devDependencies": {
     "airtap": "^1.0.0",
     "functions-have-names": "^1.2.1",
+    "has": "^1.0.3",
     "has-symbols": "^1.0.1",
     "isarray": "^2.0.5",
     "tape": "^5.0.0"

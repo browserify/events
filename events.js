@@ -448,6 +448,17 @@ function unwrapListeners(arr) {
 
 function once(emitter, name) {
   return new Promise(function (resolve, reject) {
+    if (typeof emitter.addEventListener === 'function') {
+      // EventTarget does not have `error` event semantics like Node
+      // EventEmitters, we do not listen to `error` events here.
+      emitter.addEventListener(name, function eventListener () {
+        // Remove it manually: IE8 does not support `{ once: true }`
+        emitter.removeEventListener(name, eventListener);
+        resolve([].slice.call(arguments));
+      });
+      return;
+    }
+
     function eventListener() {
       if (errorListener !== undefined) {
         emitter.removeListener('error', errorListener);
