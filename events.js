@@ -448,40 +448,48 @@ function unwrapListeners(arr) {
 
 function once(emitter, name) {
   return new Promise(function (resolve, reject) {
-    if (typeof emitter.addEventListener === 'function') {
-      // EventTarget does not have `error` event semantics like Node
-      // EventEmitters, we do not listen to `error` events here.
-      emitter.addEventListener(name, function eventListener () {
-        // Remove it manually: IE8 does not support `{ once: true }`
-        emitter.removeEventListener(name, eventListener);
-        resolve([].slice.call(arguments));
-      });
-      return;
+    function errorListener(err) {
+      emitter.removeListener(name, resolver);
+      reject(err);
     }
 
-    function eventListener() {
-      if (errorListener !== undefined) {
+    function resolver() {
+      if (typeof emitter.removeListener === 'function') {
         emitter.removeListener('error', errorListener);
       }
       resolve([].slice.call(arguments));
     };
-    var errorListener;
 
-    // Adding an error listener is not optional because
-    // if an error is thrown on an event emitter we cannot
-    // guarantee that the actual event we are waiting will
-    // be fired. The result could be a silent way to create
-    // memory or file descriptor leaks, which is something
-    // we should avoid.
-    if (name !== 'error') {
-      errorListener = function errorListener(err) {
-        emitter.removeListener(name, eventListener);
-        reject(err);
-      };
-
-      emitter.once('error', errorListener);
-    }
-
-    emitter.once(name, eventListener);
+    eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
+    addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
   });
+}
+
+function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+  if (typeof emitter.on === 'function') {
+    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
+  }
+}
+
+function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+  if (typeof emitter.addEventListener === 'function') {
+    // EventTarget does not have `error` event semantics like Node
+    // EventEmitters, we do not listen for `error` events here.
+    emitter.addEventListener(name, function wrapListener(arg) {
+      // IE does not have builtin `{ once: true }` support so we
+      // have to do it manually.
+      if (flags.once) {
+        emitter.removeEventListener(name, wrapListener);
+      }
+      listener(arg);
+    });
+  } else if (typeof emitter.on === 'function') {
+    if (flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
 }

@@ -6,6 +6,10 @@ var once = require('../').once;
 var has = require('has');
 var assert = require('assert');
 
+function Event(type) {
+  this.type = type;
+}
+
 function EventTargetMock() {
   this.events = {};
 
@@ -13,14 +17,14 @@ function EventTargetMock() {
   this.removeEventListener = common.mustCall(this.removeEventListener);
 }
 
-EventTargetMock.prototype.addEventListener = function (name, listener, options) {
+EventTargetMock.prototype.addEventListener = function addEventListener(name, listener, options) {
   if (!(name in this.events)) {
     this.events[name] = { listeners: [], options: options || {} }
   }
   this.events[name].listeners.push(listener);
 };
 
-EventTargetMock.prototype.removeEventListener = function (name, callback) {
+EventTargetMock.prototype.removeEventListener = function removeEventListener(name, callback) {
   if (!(name in this.events)) {
     return;
   }
@@ -38,23 +42,21 @@ EventTargetMock.prototype.removeEventListener = function (name, callback) {
   }
 };
 
-EventTargetMock.prototype.dispatchEvent = function (name) {
-  if (!(name in this.events)) {
+EventTargetMock.prototype.dispatchEvent = function dispatchEvent(arg) {
+  if (!(arg.type in this.events)) {
     return true;
   }
 
-  var arg = [].slice.call(arguments, 1);
-
-  var event = this.events[name];
+  var event = this.events[arg.type];
   var stack = event.listeners.slice();
 
   for (var i = 0, l = stack.length; i < l; i++) {
-    stack[i].apply(null, arg);
+    stack[i].call(null, arg);
     if (event.options.once) {
-      this.removeEventListener(name, stack[i]);
+      this.removeEventListener(arg.type, stack[i]);
     }
   }
-  return !name.defaultPrevented;
+  return !arg.defaultPrevented;
 };
 
 function onceAnEvent() {
@@ -142,36 +144,26 @@ function onceError() {
 
 function onceWithEventTarget() {
   var et = new EventTargetMock();
+  var event = new Event('myevent');
   process.nextTick(function () {
-    et.dispatchEvent('myevent', 42);
+    et.dispatchEvent(event);
   });
   return once(et, 'myevent').then(function (args) {
     var value = args[0];
-    assert.strictEqual(value, 42);
+    assert.strictEqual(value, event);
     assert.strictEqual(has(et.events, 'myevent'), false);
-  });
-}
-
-function onceWithEventTargetTwoArgs() {
-  var et = new EventTargetMock();
-  process.nextTick(function () {
-    et.dispatchEvent('myevent', 42, 24);
-  });
-  return once(et, 'myevent').then(function (value) {
-    assert.strictEqual(value[0], 42);
-    assert.strictEqual(value[1], 24);
   });
 }
 
 function onceWithEventTargetError() {
   var et = new EventTargetMock();
-  var expected = new Error('kaboom');
+  var error = new Event('error');
   process.nextTick(function () {
-    et.dispatchEvent('error', expected);
+    et.dispatchEvent(error);
   });
   return once(et, 'error').then(function (args) {
-    var error = args[0];
-    assert.strictEqual(error, expected);
+    var err = args[0];
+    assert.strictEqual(err, error);
     assert.strictEqual(has(et.events, 'error'), false);
   });
 }
@@ -183,6 +175,5 @@ module.exports = Promise.all([
   stopListeningAfterCatchingError(),
   onceError(),
   onceWithEventTarget(),
-  onceWithEventTargetTwoArgs(),
   onceWithEventTargetError()
 ]);
