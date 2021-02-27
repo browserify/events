@@ -175,7 +175,7 @@ function onceWithEventTargetError() {
   });
 }
 
-Promise.all([
+module.exports = Promise.all([
   onceAnEvent(),
   onceAnEventWithTwoArgs(),
   catchesErrors(),
@@ -184,7 +184,4 @@ Promise.all([
   onceWithEventTarget(),
   onceWithEventTargetTwoArgs(),
   onceWithEventTargetError()
-]).catch(function (err) {
-  console.error(err.stack)
-  process.exit(1)
-});
+]);
