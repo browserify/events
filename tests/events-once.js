@@ -180,7 +180,7 @@ function prioritizesEventEmitter() {
   return once(ee, 'foo');
 }
 
-module.exports = Promise.all([
+var allTests = [
   onceAnEvent(),
   onceAnEventWithTwoArgs(),
   catchesErrors(),
@@ -189,4 +189,46 @@ module.exports = Promise.all([
   onceWithEventTarget(),
   onceWithEventTargetError(),
   prioritizesEventEmitter()
-]);
+];
+
+var hasBrowserEventTarget = false;
+try {
+  hasBrowserEventTarget = typeof (new window.EventTarget().addEventListener) === 'function' &&
+    new window.Event('xyz').type === 'xyz';
+} catch (err) {}
+
+if (hasBrowserEventTarget) {
+  function onceWithBrowserEventTarget() {
+    var et = new window.EventTarget();
+    var event = new window.Event('myevent');
+    process.nextTick(function () {
+      et.dispatchEvent(event);
+    });
+    return once(et, 'myevent').then(function (args) {
+      var value = args[0];
+      assert.strictEqual(value, event);
+      assert.strictEqual(has(et.events, 'myevent'), false);
+    });
+  }
+
+  function onceWithBrowserEventTargetError() {
+    var et = new window.EventTarget();
+    var error = new window.Event('error');
+    process.nextTick(function () {
+      et.dispatchEvent(error);
+    });
+    return once(et, 'error').then(function (args) {
+      var err = args[0];
+      assert.strictEqual(err, error);
+      assert.strictEqual(has(et.events, 'error'), false);
+    });
+  }
+
+  common.test.comment('Testing with browser built-in EventTarget');
+  allTests.push([
+    onceWithBrowserEventTarget(),
+    onceWithBrowserEventTargetError()
+  ]);
+}
+
+module.exports = Promise.all(allTests);
