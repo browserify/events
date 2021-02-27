@@ -461,7 +461,9 @@ function once(emitter, name) {
     };
 
     eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
-    addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+    if (name !== 'error') {
+      addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+    }
   });
 }
 

@@ -134,7 +134,9 @@ function onceError() {
     ee.emit('error', expected);
   });
 
-  return once(ee, 'error').then(function (args) {
+  var promise = once(ee, 'error');
+  assert.strictEqual(ee.listenerCount('error'), 1);
+  return promise.then(function (args) {
     var err = args[0]
     assert.strictEqual(err, expected);
     assert.strictEqual(ee.listenerCount('error'), 0);
