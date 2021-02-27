@@ -474,7 +474,13 @@ function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
 }
 
 function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
-  if (typeof emitter.addEventListener === 'function') {
+  if (typeof emitter.on === 'function') {
+    if (flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else if (typeof emitter.addEventListener === 'function') {
     // EventTarget does not have `error` event semantics like Node
     // EventEmitters, we do not listen for `error` events here.
     emitter.addEventListener(name, function wrapListener(arg) {
@@ -485,12 +491,6 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
       }
       listener(arg);
     });
-  } else if (typeof emitter.on === 'function') {
-    if (flags.once) {
-      emitter.once(name, listener);
-    } else {
-      emitter.on(name, listener);
-    }
   } else {
     throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
   }

@@ -170,6 +170,16 @@ function onceWithEventTargetError() {
   });
 }
 
+function prioritizesEventEmitter() {
+  var ee = new EventEmitter();
+  ee.addEventListener = assert.fail;
+  ee.removeAllListeners = assert.fail;
+  process.nextTick(function () {
+    ee.emit('foo');
+  });
+  return once(ee, 'foo');
+}
+
 module.exports = Promise.all([
   onceAnEvent(),
   onceAnEventWithTwoArgs(),
@@ -177,5 +187,6 @@ module.exports = Promise.all([
   stopListeningAfterCatchingError(),
   onceError(),
   onceWithEventTarget(),
-  onceWithEventTargetError()
+  onceWithEventTargetError(),
+  prioritizesEventEmitter()
 ]);
