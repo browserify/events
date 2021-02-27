@@ -142,7 +142,7 @@ function onceError() {
 
 function onceWithEventTarget() {
   var et = new EventTargetMock();
-  process.nextTick(() => {
+  process.nextTick(function () {
     et.dispatchEvent('myevent', 42);
   });
   return once(et, 'myevent').then(function (args) {
@@ -154,7 +154,7 @@ function onceWithEventTarget() {
 
 function onceWithEventTargetTwoArgs() {
   var et = new EventTargetMock();
-  process.nextTick(() => {
+  process.nextTick(function () {
     et.dispatchEvent('myevent', 42, 24);
   });
   return once(et, 'myevent').then(function (value) {
@@ -165,7 +165,7 @@ function onceWithEventTargetTwoArgs() {
 function onceWithEventTargetError() {
   var et = new EventTargetMock();
   var expected = new Error('kaboom');
-  process.nextTick(() => {
+  process.nextTick(function () {
     et.dispatchEvent('error', expected);
   });
   return once(et, 'error').then(function (args) {
