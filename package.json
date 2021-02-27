@@ -11,11 +11,11 @@
   "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Gozala/events.git",
-    "web": "https://github.com/Gozala/events"
+    "url": "git://github.com/browserify/events.git",
+    "web": "https://github.com/browserify/events"
   },
   "bugs": {
-    "url": "http://github.com/Gozala/events/issues/"
+    "url": "http://github.com/browserify/events/issues/"
   },
   "main": "./events.js",
   "engines": {

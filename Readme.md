@@ -1,4 +1,4 @@
-# events [![Build Status](https://travis-ci.org/Gozala/events.png?branch=master)](https://travis-ci.org/Gozala/events)
+# events [![Build Status](https://travis-ci.org/browserify/events.png?branch=main)](https://travis-ci.org/browserify/events)
 
 > Node's event emitter for all engines.
 
@@ -8,7 +8,7 @@ This implements the Node.js [`events`][node.js docs] module for environments tha
 
 Note that the `events` module uses ES5 features. If you need to support very old browsers like IE8, use a shim like [`es5-shim`](https://www.npmjs.com/package/es5-shim). You need both the shim and the sham versions of `es5-shim`.
 
-This module is maintained, but only by very few people. If you'd like to help, let us know in the [Maintainer Needed](https://github.com/Gozala/events/issues/43) issue!
+This module is maintained, but only by very few people. If you'd like to help, let us know in the [Maintainer Needed](https://github.com/browserify/events/issues/43) issue!
 
 ## Install
 
