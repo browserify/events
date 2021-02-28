@@ -472,6 +472,49 @@ function createIterResult(value, done) {
   return { value: value, done: done };
 }
 
+function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+  if (typeof emitter.on === 'function') {
+    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
+  }
+}
+
+function eventTargetAgnosticRemoveListener(emitter, name, listener, flags) {
+  if (typeof emitter.removeListener === 'function') {
+    emitter.removeListener(name, listener);
+  } else if (typeof emitter.removeEventListener === 'function') {
+    emitter.removeEventListener(name, listener, flags);
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
+}
+
+function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+  if (typeof emitter.on === 'function') {
+    if (flags && flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else if (typeof emitter.addEventListener === 'function') {
+    // EventTarget does not have `error` event semantics like Node
+    // EventEmitters, we do not listen for `error` events here.
+    // TODO this wrapListener should not happen here: it means users cannot do
+    // `emitter.removeEventListener(listener)`.
+    // Might be impossible to work around; if so we will have to rely on builtin
+    // `{ once: true }` support after all
+    emitter.addEventListener(name, function wrapListener(arg) {
+      // IE does not have builtin `{ once: true }` support so we
+      // have to do it manually.
+      if (flags && flags.once) {
+        emitter.removeEventListener(name, wrapListener);
+      }
+      listener(arg);
+    });
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
+}
+
 var AsyncIteratorPrototype = undefined;
 
 function on(emitter, event) {
@@ -519,8 +562,8 @@ function on(emitter, event) {
       });
     },
     'return': function _return() {
-      emitter.removeListener(event, eventHandler);
-      emitter.removeListener('error', errorHandler);
+      eventTargetAgnosticRemoveListener(emitter, event, eventHandler);
+      eventTargetAgnosticRemoveListener(emitter, 'error', errorHandler);
       finished = true;
 
       for (var i = 0, l = unconsumedPromises.length; i < l; i++) {
@@ -533,8 +576,8 @@ function on(emitter, event) {
         throw new TypeError('The "EventEmitter.AsyncIterator" property must be an instance of Error. Received ' + typeof err);
       }
       error = err;
-      emitter.removeListener(event, eventHandler);
-      emitter.removeListener('error', errorHandler);
+      eventTargetAgnosticRemoveListener(emitter, event, eventHandler);
+      eventTargetAgnosticRemoveListener(emitter, 'error', errorHandler);
     }
   };
 
@@ -542,8 +585,8 @@ function on(emitter, event) {
 
   Object.setPrototypeOf(iterator, AsyncIteratorPrototype);
 
-  emitter.on(event, eventHandler);
-  emitter.on('error', errorHandler);
+  eventTargetAgnosticAddListener(emitter, event, eventHandler);
+  eventTargetAgnosticAddListener(emitter, 'error', errorHandler);
 
   return iterator;
 
@@ -568,34 +611,5 @@ function on(emitter, event) {
       error = err;
     }
     iterator.return();
-  }
-}
-
-function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
-  if (typeof emitter.on === 'function') {
-    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
-  }
-}
-
-function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
-  if (typeof emitter.on === 'function') {
-    if (flags.once) {
-      emitter.once(name, listener);
-    } else {
-      emitter.on(name, listener);
-    }
-  } else if (typeof emitter.addEventListener === 'function') {
-    // EventTarget does not have `error` event semantics like Node
-    // EventEmitters, we do not listen for `error` events here.
-    emitter.addEventListener(name, function wrapListener(arg) {
-      // IE does not have builtin `{ once: true }` support so we
-      // have to do it manually.
-      if (flags.once) {
-        emitter.removeEventListener(name, wrapListener);
-      }
-      listener(arg);
-    });
-  } else {
-    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
   }
 }

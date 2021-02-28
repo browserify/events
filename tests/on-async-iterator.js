@@ -205,6 +205,28 @@ async function iterableThrow() {
   assert.strictEqual(ee.listenerCount('error'), 0);
 }
 
+async function eventTarget() {
+  const et = new EventTarget();
+  const tick = () => et.dispatchEvent(new Event('tick'));
+  const interval = setInterval(tick, 0);
+  let count = 0;
+  for await (const [ event ] of on(et, 'tick')) {
+    count++;
+    assert.strictEqual(event.type, 'tick');
+    if (count >= 5) {
+      break;
+    }
+  }
+  assert.strictEqual(count, 5);
+  clearInterval(interval);
+}
+
+async function errorListenerCount() {
+  const et = new EventEmitter();
+  on(et, 'foo');
+  assert.strictEqual(et.listenerCount('error'), 1);
+}
+
 async function run() {
   var funcs = [
     basic,
@@ -215,6 +237,15 @@ async function run() {
     nextError,
     iterableThrow,
   ];
+
+  if (typeof EventTarget === 'function') {
+    funcs.push(
+      eventTarget,
+      errorListenerCount
+    );
+  } else {
+    common.test.comment('Skipping EventTarget tests');
+  }
 
   for (var fn of funcs) {
     await fn();
