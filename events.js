@@ -55,6 +55,7 @@ function EventEmitter() {
 }
 module.exports = EventEmitter;
 module.exports.once = once;
+module.exports.on = on;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
@@ -465,6 +466,109 @@ function once(emitter, name) {
       addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
     }
   });
+}
+
+function createIterResult(value, done) {
+  return { value: value, done: done };
+}
+
+var AsyncIteratorPrototype = undefined;
+
+function on(emitter, event) {
+  // Initialize it on first run
+  if (AsyncIteratorPrototype === undefined) {
+    var asyncGenerator;
+    try {
+      asyncGenerator = Function('return async function*() {};')();
+    } catch (err) {}
+    if (asyncGenerator) {
+      AsyncIteratorPrototype = Object.getPrototypeOf(
+        Object.getPrototypeOf(asyncGenerator).prototype);
+    } else {
+      AsyncIteratorPrototype = null;
+    }
+  }
+
+  var unconsumedEvents = [];
+  var unconsumedPromises = [];
+  var error = null;
+  var finished = false;
+  var iterator = {
+    next: function next() {
+      // First, we consume all unread events
+      var value = unconsumedEvents.shift();
+      if (value) {
+        return Promise.resolve(createIterResult(value, false));
+      }
+
+      // Then we error, if an error happened
+      // This happens one time if at all, because after 'error'
+      // we stop listening
+      if (error) {
+        var p = Promise.reject(error);
+        error = null;
+        return p;
+      }
+
+      // If the iterator is finished, resolve to done
+      if (finished) {
+        return Promise.resolve(createIterResult(undefined, true));
+      }
+      return new Promise(function (resolve, reject) {
+        unconsumedPromises.push({ resolve: resolve, reject: reject });
+      });
+    },
+    'return': function _return() {
+      emitter.removeListener(event, eventHandler);
+      emitter.removeListener('error', errorHandler);
+      finished = true;
+
+      for (var i = 0, l = unconsumedPromises.length; i < l; i++) {
+        unconsumedPromises[i].resolve(createIterResult(undefined, true));
+      }
+      return Promise.resolve(createIterResult(undefined, true));
+    },
+    'throw': function _throw(err) {
+      if (!err || !(err instanceof Error)) {
+        throw new TypeError('The "EventEmitter.AsyncIterator" property must be an instance of Error. Received ' + typeof err);
+      }
+      error = err;
+      emitter.removeListener(event, eventHandler);
+      emitter.removeListener('error', errorHandler);
+    }
+  };
+
+  iterator[Symbol.asyncIterator] = function () { return this; };
+
+  Object.setPrototypeOf(iterator, AsyncIteratorPrototype);
+
+  emitter.on(event, eventHandler);
+  emitter.on('error', errorHandler);
+
+  return iterator;
+
+  function eventHandler() {
+    var args = [].slice.call(arguments);
+    var promise = unconsumedPromises.shift();
+    if (promise) {
+      promise.resolve(createIterResult(args, false));
+    } else {
+      unconsumedEvents.push(args);
+    }
+  }
+
+  function errorHandler(err) {
+    finished = true;
+
+    var toError = unconsumedPromises.shift();
+    if (toError) {
+      toError.reject(err);
+    } else {
+      // The next time we call next()
+      error = err;
+    }
+    iterator.return();
+  }
 }
 
 function addErrorHandlerIfEventEmitter(emitter, handler, flags) {

@@ -50,6 +50,12 @@ if (functionsHaveNames()) {
 require('./modify-in-emit.js');
 require('./num-args.js');
 require('./once.js');
+if (typeof Promise === 'function' && hasSymbols() && Symbol.asyncIterator) {
+  require('./on-async-iterator.js');
+} else {
+  // Async iterator support is not available.
+  test('./on-async-iterator.js', { skip: true }, function () {});
+}
 require('./prepend.js');
 require('./set-max-listeners-side-effects.js');
 require('./special-event-names.js');
