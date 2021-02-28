@@ -28,6 +28,12 @@ var require = function(file) {
 };
 
 require('./add-listeners.js');
+if (typeof Promise === 'function') {
+  require('./capture-rejections.js');
+} else {
+  // Promise support is not available.
+  test('./capture-rejections.js', { skip: true }, function () {});
+}
 require('./check-listener-leaks.js');
 require('./errors.js');
 require('./events-list.js');

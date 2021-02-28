@@ -50,14 +50,37 @@ var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
   return value !== value;
 }
 
-function EventEmitter() {
-  EventEmitter.init.call(this);
+var kCapture = typeof Symbol === 'function' ? Symbol('kCapture') : '_fakeSymbol_kCapture';
+var kRejection = typeof Symbol === 'function' && typeof Symbol.for === 'function' ? Symbol.for('nodejs.rejection') : '_fakeSymbol_nodejs.rejection';
+
+function EventEmitter(opts) {
+  EventEmitter.init.call(this, opts);
 }
 module.exports = EventEmitter;
 module.exports.once = once;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.captureRejectionSymbol = kRejection;
+Object.defineProperty(EventEmitter, 'captureRejections', {
+  get: function () {
+    return EventEmitter.prototype[kCapture];
+  },
+  set: function (value) {
+    if (typeof value !== 'boolean') {
+      throw new TypeError('The "EventEmitter.captureRejections" argument must be of type boolean. Received type ' + typeof value);
+    }
+    EventEmitter.prototype[kCapture] = value;
+  },
+  enumerable: true
+});
+
+Object.defineProperty(EventEmitter.prototype, kCapture, {
+  value: false,
+  writable: true,
+  enumerable: false
+});
 
 EventEmitter.prototype._events = undefined;
 EventEmitter.prototype._eventsCount = 0;
@@ -86,7 +109,7 @@ Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
   }
 });
 
-EventEmitter.init = function() {
+EventEmitter.init = function init(opts) {
 
   if (this._events === undefined ||
       this._events === Object.getPrototypeOf(this)._events) {
@@ -95,7 +118,60 @@ EventEmitter.init = function() {
   }
 
   this._maxListeners = this._maxListeners || undefined;
+
+  if (opts && opts.captureRejections) {
+    if (typeof opts.captureRejections !== 'boolean') {
+      throw new TypeError('The "options.captureRejections" argument must be of type boolean. Received type ' + typeof opts.captureRejections);
+    }
+    this[kCapture] = Boolean(opts.captureRejections);
+  } else {
+    this[kCapture] = EventEmitter.prototype[kCapture];
+  }
 };
+
+var ProcessNextTick = typeof queueMicrotask === 'function'
+  ? queueMicrotask
+  : typeof setImmediate === 'function'
+  ? setImmediate
+  : setTimeout;
+
+function addCatch(that, promise, type, args) {
+  if (!that[kCapture]) {
+    return;
+  }
+
+  // Handle Promises/A+ spec, then could be a getter
+  // that throws on second use.
+  try {
+    var then = promise.then;
+    if (typeof then === 'function') {
+      then.call(promise, undefined, function(err) {
+        ProcessNextTick(function () {
+          emitUnhandledRejectionOrErr(that, err, type, args);
+        });
+      });
+    }
+  } catch (err) {
+    that.emit('error', err);
+  }
+}
+
+function emitUnhandledRejectionOrErr(ee, err, type, args) {
+  if (typeof ee[kRejection] === 'function') {
+    ee[kRejection].apply(ee, [err, type].concat(args));
+  } else {
+    // We have to disable the capture rejections mechanism, otherwise
+    // we might end up in an infinite loop.
+    var prev = ee[kCapture];
+
+    try {
+      ee[kCapture] = false;
+      ee.emit('error', err);
+    } finally {
+      ee[kCapture] = prev;
+    }
+  }
+}
 
 // Obviously not all Emitters should be limited to 10. This function allows
 // that to be increased. Set to zero for unlimited.
@@ -150,12 +226,29 @@ EventEmitter.prototype.emit = function emit(type) {
     return false;
 
   if (typeof handler === 'function') {
-    ReflectApply(handler, this, args);
+    var result = ReflectApply(handler, this, args);
+
+    // We check if result is undefined first because that
+    // is the most common case so we do not pay any perf
+    // penalty
+    if (result !== undefined && result !== null) {
+      addCatch(this, result, type, args);
+    }
   } else {
     var len = handler.length;
     var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      ReflectApply(listeners[i], this, args);
+    for (var i = 0; i < len; ++i) {
+      var result = ReflectApply(listeners[i], this, args);
+
+      // We check if result is undefined first because that
+      // is the most common case so we do not pay any perf
+      // penalty.
+      // This code is duplicated because extracting it away
+      // would make it non-inlineable.
+      if (result !== undefined && result !== null) {
+        addCatch(this, result, type, args);
+      }
+    }
   }
 
   return true;
