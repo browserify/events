@@ -13,3 +13,7 @@ browsers:
     version: 9..latest
   - name: microsoftedge
     version: 13..latest
+browserify:
+  # IE 9/10 compatibility
+  - require: 'buffer/'
+    expose: 'buffer'
