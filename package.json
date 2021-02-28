@@ -22,7 +22,7 @@
     "node": ">=0.8.x"
   },
   "devDependencies": {
-    "airtap": "^3.0.0",
+    "airtap": "^4.0.1",
     "buffer": "^4.9.2",
     "functions-have-names": "^1.2.1",
     "has": "^1.0.3",
