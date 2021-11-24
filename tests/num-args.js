@@ -20,9 +20,9 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var events = require('../');
+var EventEmitter = require('../').default;
 
-var e = new events.EventEmitter(),
+var e = new EventEmitter(),
     num_args_emited = [];
 
 e.on('numArgs', function() {

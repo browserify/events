@@ -20,7 +20,7 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var EventEmitter = require('../');
+var EventEmitter = require('../').default;
 
 var emitter = new EventEmitter();
 emitter.on('foo', function() {});

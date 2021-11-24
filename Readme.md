@@ -1,19 +1,24 @@
 # events [![Build Status](https://travis-ci.org/Gozala/events.png?branch=master)](https://travis-ci.org/Gozala/events)
 
-Node's event emitter for all engines.
+Algolia's fork of Node's event emitter for all engines.
 
-## Install ##
+Specifics:
+- v1.1.1-based, as it's much smaller and we don't use the newer features
+- builtin type-definitions
+- better interop with ESM, while still being cjs
+
+## Install
 
 ```
 npm install events
 ```
 
-## Require ##
+## Require
 
 ```javascript
-var EventEmitter = require('events').EventEmitter
+var EventEmitter = require('events').default;
 ```
 
-## Usage ##
+## Usage
 
 See the [node.js event emitter docs](http://nodejs.org/api/events.html)

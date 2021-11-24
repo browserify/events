@@ -1,14 +1,25 @@
+var test = require('tape');
 
-require('./legacy-compat');
-
-// we do this to easily wrap each file in a mocha test
-// and also have browserify be able to statically analyze this file
+// we do this to easily wrap each file in a tape test
 var orig_require = require;
 var require = function(file) {
-    test(file, function() {
-        orig_require(file);
+    test(file, function(t) {
+        // Store the tape object so tests can access it.
+        // t.on('end', function () { delete common.test; });
+        // common.test = t;
+
+        try {
+          var exp = orig_require(file);
+          if (exp && exp.then) {
+            exp.then(function () { t.end(); }, t.fail);
+            return;
+          }
+        } catch (err) {
+          t.fail(err);
+        }
+        t.end();
     });
-}
+};
 
 require('./add-listeners.js');
 require('./check-listener-leaks.js');

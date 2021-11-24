@@ -20,9 +20,9 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var events = require('../');
+var EventEmitter = require('../').default;
 
-var e = new events.EventEmitter;
+var e = new EventEmitter;
 
 assert.deepEqual(e._events, {});
 e.setMaxListeners(5);

@@ -1,7 +1,6 @@
 {
-  "name": "events",
-  "id": "events",
-  "version": "1.1.1",
+  "name": "@algolia/events",
+  "version": "4.0.0",
   "description": "Node's event emitter for all engines.",
   "keywords": [
     "events",
@@ -9,25 +8,27 @@
     "eventDispatcher",
     "listeners"
   ],
-  "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Gozala/events.git",
-    "web": "https://github.com/Gozala/events"
+    "url": "git://github.com/algolia/events.git",
+    "web": "https://github.com/algolia/events"
   },
   "bugs": {
-    "url": "http://github.com/Gozala/events/issues/"
+    "url": "http://github.com/algolia/events/issues/"
   },
+  "files": [
+    "events.js",
+    "types/index.d.ts"
+  ],
   "main": "./events.js",
-  "engines": {
-    "node": ">=0.4.x"
-  },
+  "types": "types",
   "devDependencies": {
-    "mocha": "~1.21.4",
-    "zuul": "~1.10.2"
+    "dtslint": "^4.2.1",
+    "tape": "^5.0.0",
+    "typescript": "^4.5.2"
   },
   "scripts": {
-    "test": "mocha --ui qunit -- tests/index.js && zuul -- tests/index.js"
+    "test": "node tests/index.js && dtslint types"
   },
   "license": "MIT"
 }

@@ -20,11 +20,11 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var events = require('../');
+var EventEmitter = require('../').default;
 
 var gotEvent = false;
 
-var e = new events.EventEmitter();
+var e = new EventEmitter();
 
 e.on('maxListeners', function() {
   gotEvent = true;

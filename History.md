@@ -1,3 +1,8 @@
+# 4.0.0 (2021-11-24)
+
+  - add type definitions
+  - remove fake "named import" of EventEmitter
+
 # 1.1.1 (2016-06-22)
 
   - add more context to errors if they are not instanceof Error

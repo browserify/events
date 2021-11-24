@@ -20,9 +20,9 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var events = require('../');
+var EventEmitter = require('../').default;
 
-var e = new events.EventEmitter();
+var e = new EventEmitter();
 
 var events_new_listener_emited = [];
 var listeners_new_listener_emited = [];
@@ -54,7 +54,7 @@ e.emit('hello', 'a', 'b');
 
 
 // just make sure that this doesn't throw:
-var f = new events.EventEmitter();
+var f = new EventEmitter();
 f.setMaxListeners(0);
 
 assert.deepEqual(['hello', 'foo'], events_new_listener_emited);

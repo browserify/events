@@ -20,11 +20,11 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var assert = require('assert');
-var events = require('../');
+var EventEmitter = require('../').default;
 
 var callbacks_called = [];
 
-var e = new events.EventEmitter();
+var e = new EventEmitter();
 
 function callback1() {
   callbacks_called.push('callback1');
