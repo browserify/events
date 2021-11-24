@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: cimg/node:stable
+      - image: cimg/node:lts
     steps:
       - checkout
       - run:
