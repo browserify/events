@@ -1,6 +1,6 @@
 {
   "name": "events",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Node's event emitter for all engines.",
   "keywords": [
     "events",
@@ -18,11 +18,13 @@
     "url": "http://github.com/browserify/events/issues/"
   },
   "main": "./events.js",
+  "module": "./events.mjs",
   "engines": {
     "node": ">=0.8.x"
   },
   "devDependencies": {
     "airtap": "^1.0.0",
+    "esbuild": "^0.14.49",
     "functions-have-names": "^1.2.1",
     "has": "^1.0.3",
     "has-symbols": "^1.0.1",
@@ -30,6 +32,7 @@
     "tape": "^5.0.0"
   },
   "scripts": {
+    "build": "esbuild events.mjs --platform=node --bundle --target=node0.8 --outfile=events.js",
     "test": "node tests/index.js",
     "test:browsers": "airtap -- tests/index.js"
   },
