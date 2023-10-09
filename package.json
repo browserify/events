@@ -22,16 +22,21 @@
     "node": ">=0.8.x"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.5",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "airtap": "^1.0.0",
     "functions-have-names": "^1.2.1",
     "has": "^1.0.3",
     "has-symbols": "^1.0.1",
     "isarray": "^2.0.5",
+    "rollup": "^4.0.2",
     "tape": "^5.0.0"
   },
   "scripts": {
     "test": "node tests/index.js",
-    "test:browsers": "airtap -- tests/index.js"
+    "test:browsers": "airtap -- tests/index.js",
+    "build:umd": "rollup -c rollup.config.mjs"
   },
   "license": "MIT"
 }
