@@ -33,5 +33,6 @@
     "test": "node tests/index.js",
     "test:browsers": "airtap -- tests/index.js"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "sideEffects": false
 }
